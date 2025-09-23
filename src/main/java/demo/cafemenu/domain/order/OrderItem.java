@@ -10,6 +10,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,10 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "order_items",
+    uniqueConstraints = @UniqueConstraint(name="uk_orderitem_order_product", columnNames={"order_id","product_id"}),
     indexes = {
-        @Index(name = "idx_item_order", columnList = "order_id"),
-        @Index(name = "idx_item_product", columnList = "productId")
+        @Index(name="idx_item_order", columnList="order_id"),
+        @Index(name="idx_item_product", columnList="product_id")
     })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

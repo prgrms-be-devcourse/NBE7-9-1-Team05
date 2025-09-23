@@ -21,14 +21,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Customer extends BaseTimeEntity {
 
-  // 기본키를 email로 설정
   @Id
-  @Column(nullable = false, unique = true)
-  private String email;
-
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(updatable = false, nullable = false)
   private Long id;
+
+  @Column(nullable=false, unique=true)
+  private String email;
 
   @Column(length = 100)
   private String name;

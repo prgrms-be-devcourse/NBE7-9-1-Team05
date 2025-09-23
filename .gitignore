@@ -35,3 +35,25 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+logs/
+*.log
+*.gz
+hs_err_pid*
+replay_pid*
+
+# --- H2 local database files (절대 커밋 금지) ---
+*.mv.db
+*.h2.db
+*.trace.db
+*.lock.db
+
+# --- Local env files (향후 비밀값 관리 대비) ---
+.env
+.env.*
+

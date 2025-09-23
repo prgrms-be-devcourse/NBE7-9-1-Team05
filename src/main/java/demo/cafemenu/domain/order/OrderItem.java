@@ -42,7 +42,7 @@ public class OrderItem extends BaseTimeEntity {
   @Setter
   private Order order;
 
-  @Column(nullable = false)
+  @Column(name = "product_id", nullable = false)
   private Long productId;
 
   /** 주문 시점의 단가(스냅샷) */

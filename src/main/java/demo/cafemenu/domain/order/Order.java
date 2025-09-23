@@ -58,11 +58,13 @@ public class Order extends BaseTimeEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(length = 20, nullable = false)
-  private OrderStatus status;
+  @Builder.Default
+  private OrderStatus status = OrderStatus.PENDING;
 
   /** 주문 총액(원) — items의 lineAmount 합 */
   @Column(nullable = false)
-  private Integer totalAmount;
+  @Builder.Default
+  private Integer totalAmount = 0;
 
   /** 주문 품목들 */
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

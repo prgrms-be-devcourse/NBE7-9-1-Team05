@@ -71,6 +71,10 @@ public class Order extends BaseTimeEntity {
   @Builder.Default
   private List<OrderItem> items = new ArrayList<>();
 
+  public void recalcTotal() {
+    this.totalAmount = items.stream().mapToInt(OrderItem::getLineAmount).sum();
+  }
+
   public void changeStatus(OrderStatus status) {
     this.status = status;
   }

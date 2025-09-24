@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Controller
+@Controller("productMenuController")
 public class ProductController {
     private final ProductService productService;
 

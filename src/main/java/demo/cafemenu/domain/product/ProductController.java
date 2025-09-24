@@ -14,6 +14,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // cafemenu.controller로 옮길 시, 해당 코드 옮기기
     // 전체 조회
     @GetMapping("/api/beans")
     @ResponseBody

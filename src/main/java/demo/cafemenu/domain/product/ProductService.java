@@ -12,6 +12,7 @@ public class ProductService {
     @PersistenceContext
     private EntityManager em;
 
+    // cafemenu.service로 옮길 시, 해당 코드 옮기기
     public List<Product> findAll(){
         return em.createQuery("select p from Product p", Product.class)
                 .getResultList();

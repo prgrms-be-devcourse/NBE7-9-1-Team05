@@ -1,18 +1,16 @@
-package demo.cafemenu.domain.product;
+package demo.cafemenu.domain.customer.service;
 
-import demo.cafemenu.repository.ProductRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import demo.cafemenu.domain.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("productMenuService")
-public class ProductService {
+@Service("productMenuServ")
+public class CustomertService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public CustomertService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -20,5 +18,4 @@ public class ProductService {
     public List<Product> findAll(){
         return productRepository.findAll();
     }
-
 }

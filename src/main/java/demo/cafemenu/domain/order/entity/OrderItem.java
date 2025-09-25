@@ -1,4 +1,4 @@
-package demo.cafemenu.domain.order;
+package demo.cafemenu.domain.order.entity;
 
 import demo.cafemenu.domain.BaseTimeEntity;
 import jakarta.persistence.Column;

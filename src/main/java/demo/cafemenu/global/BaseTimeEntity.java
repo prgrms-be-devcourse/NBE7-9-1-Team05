@@ -1,4 +1,4 @@
-package demo.cafemenu.domain;
+package demo.cafemenu.global;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

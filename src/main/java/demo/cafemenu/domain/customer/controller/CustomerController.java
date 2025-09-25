@@ -1,16 +1,16 @@
-package demo.cafemenu.domain.product;
+package demo.cafemenu.domain.customer.controller;
+import demo.cafemenu.domain.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
 @Controller("productMenuController")
-public class ProductController {
+public class CustomerController {
     private final ProductService productService;
 
-    public ProductController(ProductService productService){
+    public CustomerController(ProductService productService){
         this.productService = productService;
     }
 

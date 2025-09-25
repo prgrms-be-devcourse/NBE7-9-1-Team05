@@ -1,40 +1,45 @@
 spring:
-  profiles:
-    active: dev
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
-  output:
-    ansi:
-      enabled: always
+  application:
+    name: cafe-menu
+
   datasource:
-    hikari:
-      auto-commit: false
+    url: jdbc:h2:mem:db_dev;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
   jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  output:
+    ansi:
+      enabled: always
+
+# Next.js 로컬 개발 CORS
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+  # JWT
+  jwt:
+    secret: ${JWT_SECRET}
 
 springdoc:
   default-produces-media-type: application/json
+  paths-to-match: /api/**
 
 logging:
   level:
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.orm.jdbc.extract: TRACE
-    org.springframework.transaction.interceptor: TRACE
-    com.rest1: DEBUG
-
-custom:
-  jwt:
-    expireSeconds: "#{30 * 60}"
-    secretPattern: abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security: info

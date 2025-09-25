@@ -68,6 +68,12 @@ public class Order extends BaseTimeEntity {
   @Builder.Default
   private Integer totalAmount = 0;
 
+  @Column(name = "shipping_address") // PENDING에서는 null 허용
+  private String shippingAddress;
+
+  @Column(name = "shipping_postcode", length = 20)
+  private String shippingPostcode;
+
   /** 주문 품목들 */
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default

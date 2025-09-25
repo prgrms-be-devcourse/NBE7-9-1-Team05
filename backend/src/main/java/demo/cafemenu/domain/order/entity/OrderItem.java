@@ -1,6 +1,7 @@
 package demo.cafemenu.domain.order.entity;
 
-import demo.cafemenu.domain.BaseTimeEntity;
+
+import demo.cafemenu.global.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

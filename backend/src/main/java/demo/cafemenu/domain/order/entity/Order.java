@@ -1,7 +1,7 @@
 package demo.cafemenu.domain.order.entity;
 
-import demo.cafemenu.domain.BaseTimeEntity;
-import demo.cafemenu.domain.customer.Customer;
+import demo.cafemenu.domain.customer.entity.Customer;
+import demo.cafemenu.global.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,5 +1,6 @@
 package demo.cafemenu.domain.customer.service;
 
+import demo.cafemenu.domain.product.entity.Product;
 import demo.cafemenu.domain.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 

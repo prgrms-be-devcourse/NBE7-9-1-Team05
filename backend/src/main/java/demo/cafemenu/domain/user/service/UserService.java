@@ -22,7 +22,7 @@ public class UserService {
   public SignupResponse signup(SignupRequest request) {
 
     // 중복 가입 확인(이메일)
-    if (userRepository.existsByEmail(email)) {
+    if (userRepository.existsByEmail(request.email())) {
       throw new BusinessException(ErrorCode.USER_EMAIL_DUPLICATE);
     }
 

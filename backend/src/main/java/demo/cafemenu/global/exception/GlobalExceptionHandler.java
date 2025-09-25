@@ -1,6 +1,7 @@
 package demo.cafemenu.global.exception;
 
 
+import static demo.cafemenu.global.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static demo.cafemenu.global.exception.ErrorCode.INVALID_REQUEST;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,6 @@ public class GlobalExceptionHandler {
     log.error("Unexpected error: {}", e.getMessage(), e);
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error"));
+        .body(new ErrorResponse(INTERNAL_SERVER_ERROR, "Internal server error"));
   }
 }

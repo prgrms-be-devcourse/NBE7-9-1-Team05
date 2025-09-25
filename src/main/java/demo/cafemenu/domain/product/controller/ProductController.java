@@ -1,6 +1,6 @@
-package demo.cafemenu.controller;
+package demo.cafemenu.domain.product.controller;
 
-import demo.cafemenu.service.ProductService;
+import demo.cafemenu.domain.product.service.ProductService;
 import demo.cafemenu.web.ProductForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package demo.cafemenu.domain.order;
+package demo.cafemenu.domain.order.entity;
 
 
 public enum OrderStatus {

@@ -1,7 +1,7 @@
-package demo.cafemenu.service;
+package demo.cafemenu.domain.product.service;
 
-import demo.cafemenu.domain.product.Product;
-import demo.cafemenu.repository.ProductRepository;
+import demo.cafemenu.domain.product.entity.Product;
+import demo.cafemenu.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

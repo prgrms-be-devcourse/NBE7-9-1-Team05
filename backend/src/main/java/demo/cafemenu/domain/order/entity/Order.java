@@ -1,6 +1,6 @@
 package demo.cafemenu.domain.order.entity;
 
-import demo.cafemenu.domain.customer.entity.Customer;
+import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.global.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -50,7 +50,7 @@ public class Order extends BaseTimeEntity {
   /** 고객 */
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  private User customer;
 
   /** 배송 배치일 (14시 마감 규칙 적용된 날짜) */
   @Column(name = "batch_date", nullable = false)

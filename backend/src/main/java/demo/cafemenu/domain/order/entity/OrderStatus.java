@@ -4,6 +4,5 @@ package demo.cafemenu.domain.order.entity;
 public enum OrderStatus {
   PENDING,    // 생성/결제대기
   PAID,       // 결제완료
-  CANCELLED,  // 취소
-  SHIPPED     // 배송시작
+  CANCELLED  // 취소
 }

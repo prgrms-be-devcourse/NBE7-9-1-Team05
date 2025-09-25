@@ -1,6 +1,6 @@
 package demo.cafemenu.domain.order.entity;
 
-import demo.cafemenu.domain.customer.entity.Customer;
+import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.global.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,10 +31,12 @@ import lombok.NoArgsConstructor;
     name = "orders",
     uniqueConstraints = {
         // 같은 고객 + 같은 배치일에 주문은 1건만 → "하루 여러 번 주문해도 합치기" 보장
-        @UniqueConstraint(name = "uk_order_customer_batch", columnNames = {"customer_id", "batch_date"})
+        @UniqueConstraint(name = "uk_order_user_date_status",
+            columnNames = {"user_id", "batch_date", "status"})
     },
     indexes = {
-        @Index(name = "idx_order_customer_batch", columnList = "customer_id,batch_date")
+        @Index(name = "idx_order_user_batch", columnList = "user_id,batch_date"),
+        @Index(name = "idx_order_user_batch_status", columnList = "user_id,batch_date,status")
     }
 )
 @Getter
@@ -49,8 +51,8 @@ public class Order extends BaseTimeEntity {
 
   /** 고객 */
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   /** 배송 배치일 (14시 마감 규칙 적용된 날짜) */
   @Column(name = "batch_date", nullable = false)
@@ -65,6 +67,12 @@ public class Order extends BaseTimeEntity {
   @Column(nullable = false)
   @Builder.Default
   private Integer totalAmount = 0;
+
+  @Column(name = "shipping_address") // PENDING에서는 null 허용
+  private String shippingAddress;
+
+  @Column(name = "shipping_postcode", length = 20)
+  private String shippingPostcode;
 
   /** 주문 품목들 */
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,6 +1,7 @@
 package demo.cafemenu.domain.user.service;
 
 import static demo.cafemenu.domain.user.entity.Role.ROLE_USER;
+import static demo.cafemenu.global.exception.ErrorCode.USER_ALREADY_EXISTS;
 
 import demo.cafemenu.domain.user.dto.SignupRequest;
 import demo.cafemenu.domain.user.dto.SignupResponse;
@@ -23,7 +24,7 @@ public class UserService {
 
     // 중복 가입 확인(이메일)
     if (userRepository.existsByEmail(request.email())) {
-      throw new BusinessException(ErrorCode.USER_EMAIL_DUPLICATE);
+      throw new BusinessException(USER_ALREADY_EXISTS);
     }
 
     User user = User.builder()

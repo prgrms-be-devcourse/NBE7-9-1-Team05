@@ -11,6 +11,7 @@ public enum ErrorCode {
   // 400 BAD REQUEST (잘못된 요청)
   INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다"),
   DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다"),
+  USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 등록된 회원입니다."),
 
   // 401 UNAUTHORIZED (인증 실패)
 

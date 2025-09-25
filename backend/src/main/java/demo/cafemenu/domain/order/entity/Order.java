@@ -31,10 +31,12 @@ import lombok.NoArgsConstructor;
     name = "orders",
     uniqueConstraints = {
         // 같은 고객 + 같은 배치일에 주문은 1건만 → "하루 여러 번 주문해도 합치기" 보장
-        @UniqueConstraint(name = "uk_order_user_batch", columnNames = {"user_id", "batch_date"})
+        @UniqueConstraint(name = "uk_order_user_date_status",
+            columnNames = {"user_id", "batch_date", "status"})
     },
     indexes = {
-        @Index(name = "idx_order_user_batch", columnList = "user_id,batch_date")
+        @Index(name = "idx_order_user_batch", columnList = "user_id,batch_date"),
+        @Index(name = "idx_order_user_batch_status", columnList = "user_id,batch_date,status")
     }
 )
 @Getter

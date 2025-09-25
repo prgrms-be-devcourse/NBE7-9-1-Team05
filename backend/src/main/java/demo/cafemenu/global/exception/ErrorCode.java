@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
   // 400 BAD REQUEST (잘못된 요청)
+  DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다");
 
   // 401 UNAUTHORIZED (인증 실패)
 

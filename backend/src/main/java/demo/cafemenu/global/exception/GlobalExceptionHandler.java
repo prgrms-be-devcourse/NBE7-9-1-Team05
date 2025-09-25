@@ -1,6 +1,8 @@
 package demo.cafemenu.global.exception;
 
 
+import static demo.cafemenu.global.exception.ErrorCode.INVALID_REQUEST;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -37,4 +37,11 @@ public class GlobalExceptionHandler {
     return new ErrorResponse(INVALID_REQUEST, errorMessage);
   }
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleAllExceptions(Exception e) {
+    log.error("Unexpected error: {}", e.getMessage(), e);
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error"));
+  }
 }

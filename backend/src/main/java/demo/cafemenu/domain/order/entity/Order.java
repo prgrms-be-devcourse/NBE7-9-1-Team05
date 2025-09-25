@@ -31,10 +31,10 @@ import lombok.NoArgsConstructor;
     name = "orders",
     uniqueConstraints = {
         // 같은 고객 + 같은 배치일에 주문은 1건만 → "하루 여러 번 주문해도 합치기" 보장
-        @UniqueConstraint(name = "uk_order_customer_batch", columnNames = {"customer_id", "batch_date"})
+        @UniqueConstraint(name = "uk_order_user_batch", columnNames = {"user_id", "batch_date"})
     },
     indexes = {
-        @Index(name = "idx_order_customer_batch", columnList = "customer_id,batch_date")
+        @Index(name = "idx_order_user_batch", columnList = "user_id,batch_date")
     }
 )
 @Getter
@@ -49,8 +49,8 @@ public class Order extends BaseTimeEntity {
 
   /** 고객 */
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "customer_id", nullable = false)
-  private User customer;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   /** 배송 배치일 (14시 마감 규칙 적용된 날짜) */
   @Column(name = "batch_date", nullable = false)

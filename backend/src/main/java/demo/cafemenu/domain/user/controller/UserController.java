@@ -19,6 +19,7 @@ public class UserController {
 
   private final UserService userService;
 
+  // 사용자 회원가입 API
   @PostMapping("/signup")
   @ResponseStatus(HttpStatus.CREATED)
   public SignupResponse signup(@Validated @RequestBody SignupRequest request) {

@@ -39,5 +39,4 @@ public class UserService {
     userRepository.save(user);
     return new SignupResponse(user.getId(), user.getEmail(), user.getName());
   }
-
 }

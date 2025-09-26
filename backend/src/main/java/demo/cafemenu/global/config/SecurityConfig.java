@@ -35,7 +35,7 @@ public class SecurityConfig {
             // 공개 엔드포인트 (회원가입/로그인은 다음 브랜치에서 구현 예정)
             .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/user/signup", "/api/user/login").permitAll()
 
             // 역할 기반
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")

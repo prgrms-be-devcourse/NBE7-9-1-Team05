@@ -26,8 +26,7 @@ public class OrderService {
     private final UserRepository userRepository;
 
     /* 주문 내역 조회
-    - userId 기준으로 주문 목록 가져오기(추후 인증기반 조회로 변경 예정)
-    - PAID 상태만
+    - status가 PAID인 것만
      */
     @Transactional
     public List<OrderDto> getPaidOrderByUserId(Long userId) {

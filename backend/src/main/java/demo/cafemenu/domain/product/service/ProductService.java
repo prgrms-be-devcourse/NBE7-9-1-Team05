@@ -17,6 +17,6 @@ public class ProductService {
 
     // 전체 상품 목록
     public List<Product> findAll(){
-        return prodctRepository.findAll();
+        return productRepository.findAll();
     }
 }

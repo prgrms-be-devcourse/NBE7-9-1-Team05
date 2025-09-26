@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final ProductRepository productRepotiroty;
 
 
   public SignupResponse signup(SignupRequest request) {

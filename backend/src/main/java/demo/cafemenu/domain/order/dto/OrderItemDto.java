@@ -8,13 +8,13 @@ import java.time.LocalDate;
 public class OrderItemDto {
     Long productId;
     Integer quantity;
-    Integer LineAmount; // 개별 상품 총 금액
+    Integer lineAmount; // 개별 상품 총 금액
     LocalDate orderDate;
 
     public OrderItemDto(Long productId, Integer quantity, Integer LineAmount, LocalDate orderDate) {
         this.productId = productId;
         this.quantity = quantity;
-        this.LineAmount = LineAmount;
+        this.lineAmount = lineAmount;
         this.orderDate = orderDate;
     }
 }

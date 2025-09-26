@@ -1,8 +1,11 @@
 package demo.cafemenu.domain.user.controller;
 
+import demo.cafemenu.domain.user.dto.LoginRequest;
+import demo.cafemenu.domain.user.dto.LoginResponse;
 import demo.cafemenu.domain.user.dto.SignupRequest;
 import demo.cafemenu.domain.user.dto.SignupResponse;
 import demo.cafemenu.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +27,13 @@ public class UserController {
   @ResponseStatus(HttpStatus.CREATED)
   public SignupResponse signup(@Validated @RequestBody SignupRequest request) {
     return userService.signup(request);
+  }
+
+  // 로그인 API (User/Admin 공용)
+  @PostMapping("/login")
+  @ResponseStatus(HttpStatus.OK)
+  public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+    return userService.login(request);
   }
 
 }

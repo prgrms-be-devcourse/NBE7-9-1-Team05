@@ -3,6 +3,8 @@ package demo.cafemenu.domain.user.service;
 import static demo.cafemenu.domain.user.entity.Role.ROLE_USER;
 import static demo.cafemenu.global.exception.ErrorCode.USER_ALREADY_EXISTS;
 
+import demo.cafemenu.domain.product.entity.Product;
+import demo.cafemenu.domain.product.repository.ProductRepository;
 import demo.cafemenu.domain.user.dto.SignupRequest;
 import demo.cafemenu.domain.user.dto.SignupResponse;
 import demo.cafemenu.domain.user.entity.User;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final ProductRepository productRepotiroty;
 
 
   public SignupResponse signup(SignupRequest request) {

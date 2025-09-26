@@ -18,6 +18,7 @@ public enum ErrorCode {
   // 403 FORBIDDEN (접근 금지)
 
   // 404 NOT FOUND
+  PAID_ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, "결제된 주문 내역이 없습니다."),
 
   // 500 INTERNAL SERVER ERROR (서버 내부 오류)
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류가 발생했습니다.");

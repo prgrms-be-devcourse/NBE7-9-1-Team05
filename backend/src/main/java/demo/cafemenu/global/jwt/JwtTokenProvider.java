@@ -1,6 +1,7 @@
 package demo.cafemenu.global.jwt;
 
 import demo.cafemenu.domain.user.entity.User;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -39,5 +40,10 @@ public class JwtTokenProvider {
         .setExpiration(exp) // 만료 시간
         .signWith(key, SignatureAlgorithm.HS256) // 암호화 알고리즘
         .compact();
+  }
+
+  // JWT 토큰 유효성 검사
+  public void validateToken(String token) throws JwtException {
+    Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
   }
 }

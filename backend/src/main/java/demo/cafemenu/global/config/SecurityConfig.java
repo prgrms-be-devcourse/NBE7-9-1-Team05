@@ -1,7 +1,6 @@
 package demo.cafemenu.global.config;
 
 import demo.cafemenu.global.jwt.JwtAuthenticationFilter;
-import demo.cafemenu.global.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final JwtTokenProvider tokenProvider;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,21 +43,21 @@ public class SecurityConfig {
             .requestMatchers("/api/order/**").hasAuthority("ROLE_USER")
 
             .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+        )
+
+        // H2 콘솔(iframe) 허용
+        .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+
+        // 인증/인가 실패 처리 (간단 버전)
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((req, res, e) ->
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+            .accessDeniedHandler((req, res, e) ->
+                res.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
         );
 
-    // H2 콘솔 iframe 허용
-    http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
-
-    // JWT 필터 연결
-    http.addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
-        UsernamePasswordAuthenticationFilter.class);
-
-    http.exceptionHandling(ex -> ex
-        .authenticationEntryPoint((req, res, e) ->
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
-        .accessDeniedHandler((req, res, e) ->
-            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
-    );
+    // JWT 필터 체인에 연결 (UsernamePasswordAuthenticationFilter 앞)
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

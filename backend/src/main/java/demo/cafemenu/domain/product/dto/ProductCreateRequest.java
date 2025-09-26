@@ -1,4 +1,4 @@
-package demo.cafemenu.domain.user.dto;
+package demo.cafemenu.domain.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

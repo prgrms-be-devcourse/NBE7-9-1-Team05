@@ -26,7 +26,7 @@ public class OrderItemService {
     private final UserRepository userRepository;
 
     /* 주문 내역 조회
-    - userId 기준으로 주문 목록 가져오기(userDetail 도입 시 변경 예정)
+    - userId 기준으로 주문 목록 가져오기(추후 인증기반 조회로 변경 예정)
     - PAID 상태만
      */
     @Transactional

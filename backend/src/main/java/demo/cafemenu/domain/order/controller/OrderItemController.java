@@ -16,7 +16,7 @@ public class OrderItemController {
     private final OrderItemService orderItemService;
 
     /*
-    userDetail 도입 시 변경 예정
+    추후 인증기반 조회로 변경 예정
     */
     @GetMapping("/{userId}/order/items")
     public ResponseEntity<List<OrderItemDto>> getOrderItemByUserId(@PathVariable Long userId) {

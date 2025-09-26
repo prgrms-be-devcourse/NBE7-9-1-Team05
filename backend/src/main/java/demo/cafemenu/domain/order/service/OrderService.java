@@ -14,7 +14,7 @@ public class OrderService {
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
 
-    public List<OrderItem> findByEmailAndPENDING(String email, OrderStatus status) {
-        return orderItemRepository.findByEmailAndPENDING(email, status);
+    public List<OrderItem> findByEmailAndPENDING(OrderStatus status) {
+        return orderItemRepository.findByEmailAndPENDING(status);
     }
 }

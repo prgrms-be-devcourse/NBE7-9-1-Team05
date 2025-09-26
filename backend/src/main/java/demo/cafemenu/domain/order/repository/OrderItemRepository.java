@@ -6,5 +6,5 @@ import demo.cafemenu.domain.order.entity.OrderStatus;
 import java.util.List;
 
 public interface OrderItemRepository {
-    List<OrderItem> findByEmailAndPENDING(String email, OrderStatus status);
+    List<OrderItem> findByEmailAndPENDING(OrderStatus status);
 }

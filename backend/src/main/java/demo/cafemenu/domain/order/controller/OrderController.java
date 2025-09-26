@@ -16,8 +16,8 @@ public class OrderController {
 
     private OrderService orderService;
 
-    @GetMapping("/api/customer/orders?email={email}")
-    public List<OrderItem> getCart(@RequestParam String eamil){
-        return orderService.findByEmailAndPENDING(eamil, PENDING);
+    @GetMapping("/api/customer/orders")
+    public List<OrderItem> getCart(){
+        return orderService.findByEmailAndPENDING(PENDING);
     }
 }

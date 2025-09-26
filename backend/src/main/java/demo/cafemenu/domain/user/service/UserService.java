@@ -1,7 +1,9 @@
 package demo.cafemenu.domain.user.service;
 
 import static demo.cafemenu.domain.user.entity.Role.ROLE_USER;
+import static demo.cafemenu.global.exception.ErrorCode.INVALID_CREDENTIALS;
 import static demo.cafemenu.global.exception.ErrorCode.USER_ALREADY_EXISTS;
+import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import demo.cafemenu.domain.user.dto.LoginRequest;
 import demo.cafemenu.domain.user.dto.LoginResponse;
@@ -62,7 +64,7 @@ public class UserService {
 
       // 3) 추가 정보(name 등) 응답에 포함하려면 DB 조회
       User user = userRepository.findByEmail(principal.getEmail())
-          .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+          .orElseThrow(() -> new BusinessException(USER_NOT_FOUND));
 
       // 4) 토큰 발급
       String token = jwtTokenProvider.createAccessToken(user);
@@ -72,7 +74,7 @@ public class UserService {
           principal.getId(), principal.getEmail(), user.getName());
 
     } catch (BadCredentialsException | UsernameNotFoundException e) {
-      throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
+      throw new BusinessException(INVALID_CREDENTIALS);
     }
   }
 }

@@ -1,5 +1,7 @@
 package demo.cafemenu.domain.product.service;
 
+import static demo.cafemenu.global.exception.ErrorCode.DUPLICATE_PRODUCT_NAME;
+
 import demo.cafemenu.domain.product.dto.ProductCreateRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;
 import demo.cafemenu.domain.product.entity.Product;

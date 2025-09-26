@@ -9,6 +9,7 @@ import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import demo.cafemenu.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
-
+  private final PasswordEncoder passwordEncoder;
 
   public SignupResponse signup(SignupRequest request) {
 
@@ -29,10 +30,11 @@ public class UserService {
 
     User user = User.builder()
         .email(request.email())
-        .password(request.password()) // 추후 BCrypt.hashpw 를 사용하여 비밀번호 암호화 예정
+        .password(passwordEncoder.encode(request.password()))
         .name(request.name())
         .role(ROLE_USER)
         .build();
+
     userRepository.save(user);
     return new SignupResponse(user.getId(), user.getEmail(), user.getName());
   }

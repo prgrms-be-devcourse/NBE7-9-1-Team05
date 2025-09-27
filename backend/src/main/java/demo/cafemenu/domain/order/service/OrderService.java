@@ -23,4 +23,7 @@ public class OrderService {
 
     // status가 pending, id => order 조회
     // order의 items 조회
+    public List<OrderItem> findItemByStatusAndUserId(Long id, OrderStatus status){
+        return orderItemRepository.findItemByStatusAndUserId(id, status);
+    }
 }

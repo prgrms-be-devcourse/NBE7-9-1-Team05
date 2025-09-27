@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,5 +38,13 @@ public class AdminProductController {
   public ProductResponse update(@PathVariable Long beanId,
       @Valid @RequestBody ProductRequest req) {
     return productService.update(beanId, req);
+  }
+
+  // 제품 삭제(admin)
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  @DeleteMapping("/{beanId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable Long beanId) {
+    productService.delete(beanId);
   }
 }

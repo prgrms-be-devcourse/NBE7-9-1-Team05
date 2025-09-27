@@ -9,7 +9,7 @@ import React, {
   useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
-import { authApi, UserInfo as OriginalUserInfo, tokenUtils } from "../services/api";
+import { authApi, UserInfo as OriginalUserInfo, tokenUtils, ROLES } from "../services/api";
 
 interface UserInfo extends OriginalUserInfo {
   password?: string;
@@ -32,30 +32,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const mockAdmin: UserInfo = {
-    id: 999,
-    email: "admin@test.com",
-    roles: ["ROLE_ADMIN"],
-    name: "Admin",
-    password: "Admin1234!",
-  };
-
   // 세션 복원
   React.useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       const userEmail = localStorage.getItem("userEmail");
-      if (token === "mock-token" && userEmail === "admin@test.com") {
-        setUser(mockAdmin);
-        setIsLoading(false);
-        return;
-      }
+      
       if (token && tokenUtils.isValid(token)) {
         const decoded = tokenUtils.getUserInfo(token);
         if (decoded) {
           const normalizedUser: UserInfo = {
             ...decoded,
-            roles: Array.isArray(decoded.roles) ? decoded.roles : [decoded.roles],
+            role: decoded.role || ROLES.USER,
           };
           setUser(normalizedUser as UserInfo);
         }
@@ -72,14 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string
   ): Promise<UserInfo | null> => {
-    // 목업 관리자 계정 처리
-    if (email === "admin@test.com" && password === mockAdmin.password) {
-      setUser(mockAdmin);
-      localStorage.setItem("token", "mock-token");
-      localStorage.setItem("userEmail", mockAdmin.email);
-      setIsLoading(false);
-      return mockAdmin;
-    }
 
     setIsLoading(true);
     try {
@@ -92,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const nextUser: UserInfo = {
           id: res.userId,
           email: res.email,
-          roles: Array.isArray(res.roles) ? res.roles : [res.roles], // 항상 배열로 보정됨
+          role: res.role,
           name: res.name,
         };
 
@@ -109,24 +89,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   // 로그아웃
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
-    const redirectPath = user?.roles?.includes("ROLE_ADMIN")
-      ? "/admin/login"
-      : "/login";
-    setUser(null);
-    router.push(redirectPath);
+  const logout = async () => {
+    try {
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // 클라이언트 데이터 정리
+      localStorage.removeItem("token");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("addedProducts"); // 관리자 추가 상품 정리
+      
+      // 사용자 상태 초기화
+      setUser(null);
+      
+      
+      // 적절한 페이지로 리다이렉트
+      const redirectPath = user?.role === ROLES.ADMIN
+        ? "/admin/login"
+        : "/login";
+      router.push(redirectPath);
+    }
   };
 
   // 권한 체크
   const hasRole = useCallback(
-    (role: string) => user?.roles?.includes(role) ?? false,
+    (role: string) => user?.role === role,
     [user]
   );
 
   const isAdmin = useMemo(
-    () => user?.roles?.includes("ROLE_ADMIN") ?? false,
+    () => user?.role === ROLES.ADMIN,
     [user]
   );
 

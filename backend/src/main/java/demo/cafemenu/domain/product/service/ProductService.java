@@ -21,8 +21,12 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 전체 상품 목록
-    public List<Product> findAll(){
-        return productRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAll() {
+        return productRepository.findAll()
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     // 제품 등록(관리자)
@@ -49,6 +53,13 @@ public class ProductService {
         product.change(req.name(), req.price(), req.description());
         return toResponse(product);
 
+    }
+
+    // 제품 삭제(관리자)
+    public void delete(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
     }
 
     private ProductResponse toResponse(Product p) {

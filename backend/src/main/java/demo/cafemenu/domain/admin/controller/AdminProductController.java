@@ -4,9 +4,12 @@ import demo.cafemenu.domain.product.dto.ProductRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;
 import demo.cafemenu.domain.product.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminProductController {
 
   private final ProductService productService;
+
+  // 제품 전체 조회(admin)
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  @GetMapping
+  public List<ProductResponse> list() {
+    return productService.getAll();
+  }
 
   // 제품 등록(admin)
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -37,5 +47,13 @@ public class AdminProductController {
   public ProductResponse update(@PathVariable Long beanId,
       @Valid @RequestBody ProductRequest req) {
     return productService.update(beanId, req);
+  }
+
+  // 제품 삭제(admin)
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  @DeleteMapping("/{beanId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable Long beanId) {
+    productService.delete(beanId);
   }
 }

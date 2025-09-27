@@ -33,7 +33,7 @@ public class OrderService {
     - status가 PAID인 것만
      */
     @Transactional
-    public List<OrderDto> getPaidOrderByUserId(Long userId) {
+    public List<OrderDto> getPaidOrder(Long userId) {
         User user = userRepository.findById(userId).get();
 
         List<Order> paidOrder = orderRepository
@@ -41,15 +41,8 @@ public class OrderService {
         if (paidOrder.isEmpty()) {
             throw new BusinessException(ErrorCode.PAID_ORDERS_NOT_FOUND);
         }
-
         return paidOrder.stream()
-                .map(item -> new OrderDto(
-                        item.getId(),
-                        item.getUser().getEmail(),
-                        item.getBatchDate(),
-                        item.getTotalAmount(),
-                        item.getStatus()
-                ))
+                .map(OrderDto::from)
                 .toList();
     }
 

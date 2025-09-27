@@ -17,10 +17,11 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    // 주문내역 조회
     @GetMapping("/order")
-    public ResponseEntity<List<OrderDto>> getPaidOrderByUserId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<List<OrderDto>> getPaidOrder(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
-        List<OrderDto> items = orderService.getPaidOrderByUserId(userId);
+        List<OrderDto> items = orderService.getPaidOrder(userId);
         return ResponseEntity.ok(items);
     }
 

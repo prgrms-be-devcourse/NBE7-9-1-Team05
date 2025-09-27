@@ -2,6 +2,7 @@ package demo.cafemenu.domain.order.controller;
 
 import demo.cafemenu.domain.order.dto.OrderDto;
 import demo.cafemenu.domain.order.service.OrderService;
+import demo.cafemenu.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

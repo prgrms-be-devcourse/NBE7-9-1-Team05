@@ -1,23 +1,29 @@
 package demo.cafemenu.domain.order.service;
 
-import demo.cafemenu.domain.order.entity.Order;
+import demo.cafemenu.domain.order.entity.OrderItem;
 import demo.cafemenu.domain.order.entity.OrderStatus;
-import demo.cafemenu.domain.order.repository.OrderRepository;
+import demo.cafemenu.domain.order.repository.OrderItemRepository;
+import demo.cafemenu.domain.user.reposiitory.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
-
 @Service
+@RequiredArgsConstructor
 public class OrderService {
-    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public Long findIdByEmail(String email){
+        return userRepository.findIdByEmail(email);
+        // email로 user id를 찾기
+        // user id를 이용해서 order 목록 조회 -> items 조회
     }
 
-    public List<Order> findByStatusAndUserEmail(String email) {
-        return orderRepository.findByStatusAndUserEmail(PENDING, email);
+    // status가 pending, id => order 조회
+    // order의 items 조회
+    public List<OrderItem> findItemsByStatusAndId(Long id) {
+        return orderItemRepository.findItemsByStatusAndId(OrderStatus.PENDING, id);
     }
 }

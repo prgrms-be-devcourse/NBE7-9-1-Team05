@@ -23,5 +23,11 @@ public class OrderController {
         List<OrderDto> items = orderService.getPaidOrderByUserId(userId);
         return ResponseEntity.ok(items);
     }
+
+    @PostMapping("/item/{productId}")
+    public ResponseEntity<Void> addItemToCart(@RequestParam Long userId, @PathVariable Long productId) {
+        orderService.addOrderItem(userId, productId);
+        return ResponseEntity.ok().build();
+    }
 }
 

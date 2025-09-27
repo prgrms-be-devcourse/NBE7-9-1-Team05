@@ -21,8 +21,12 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 전체 상품 목록
-    public List<Product> findAll(){
-        return productRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAll() {
+        return productRepository.findAll()
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     // 제품 등록(관리자)

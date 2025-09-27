@@ -14,11 +14,16 @@ public enum ErrorCode {
   USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 등록된 회원입니다."),
 
   // 401 UNAUTHORIZED (인증 실패)
+  INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 올바르지 않습니다."),
 
   // 403 FORBIDDEN (접근 금지)
 
   // 404 NOT FOUND
   PAID_ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, "결제된 주문 내역이 없습니다."),
+  USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+
+  // 409 CONFLICT
+  DUPLICATE_PRODUCT_NAME(HttpStatus.CONFLICT, "이미 존재하는 상품명입니다."),
 
   // 500 INTERNAL SERVER ERROR (서버 내부 오류)
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류가 발생했습니다.");

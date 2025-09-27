@@ -51,6 +51,13 @@ public class ProductService {
 
     }
 
+    // 제품 삭제(관리자)
+    public void delete(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
+    }
+
     private ProductResponse toResponse(Product p) {
         return new ProductResponse(p.getId(), p.getName(), p.getPrice(), p.getDescription());
     }

@@ -20,6 +20,7 @@ public class AdminProductController {
 
   private final ProductService productService;
 
+  // 제품 등록(admin)
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

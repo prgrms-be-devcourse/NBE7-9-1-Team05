@@ -36,6 +36,20 @@ public class ProductService {
           .build()));
     }
 
+    // 제품 수정(관리자)
+    public ProductResponse update(Long id, ProductRequest req) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(new BusinessException(PRODUCT_NOT_FOUND));
+
+        if (productRepository.existsByNameAndIdNot(req.name(), id)) {
+            throw new BusinessException(DUPLICATE_PRODUCT_NAME);
+        }
+
+        product.change(req.name(), req.price(), req.description()); // 영속 엔티티 변경 → dirty checking
+        return toResponse(product);
+
+    }
+
     private ProductResponse toResponse(Product p) {
         return new ProductResponse(p.getId(), p.getName(), p.getPrice(), p.getDescription());
     }

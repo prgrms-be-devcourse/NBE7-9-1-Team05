@@ -1,6 +1,7 @@
 package demo.cafemenu.domain.order.controller;
 
 import demo.cafemenu.domain.order.dto.OrderDto;
+import demo.cafemenu.domain.order.dto.OrderItemRequestDto;
 import demo.cafemenu.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,13 @@ public class OrderController {
         Long userId = userDetails.getId();
         List<OrderDto> items = orderService.getPaidOrderByUserId(userId);
         return ResponseEntity.ok(items);
+    }
+
+    @PostMapping("/order/orderItem/add")
+    public ResponseEntity<Void> addItemToCart(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody OrderItemRequestDto request) {
+        Long userId = userDetails.getId();
+        orderService.addOrderItem(userId, request);
+        return ResponseEntity.ok().build();
     }
 }
 

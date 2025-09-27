@@ -19,12 +19,8 @@ public class OrderService {
         return userRepository.findIdByEmail(email);
         // email로 user id를 찾기
         // user id를 이용해서 order 목록 조회 -> items 조회
-
     }
 
     // status가 pending, id => order 조회
     // order의 items 조회
-    public List<OrderItem> findItemByStatusAndUserId(Long id) {
-        return orderItemRepository.findItemByStatusAndUserId(OrderStatus.PENDING, id);
-    }
 }

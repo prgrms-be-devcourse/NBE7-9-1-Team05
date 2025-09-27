@@ -18,6 +18,5 @@ public class OrderController {
     @GetMapping("/api/user/orders?email={email}") // 여기 static resource가 없다?
     public List<OrderItem> getOrdersByStatusAndEmail(@RequestParam String email){
         Long id = orderService.findIdByEmail(email); // user id를 찾는다. -> id로 order의 items 조회
-        return orderService.findItemByStatusAndUserId(id);
     }
 }

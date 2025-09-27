@@ -46,7 +46,7 @@ public class ProductService {
             throw new BusinessException(DUPLICATE_PRODUCT_NAME);
         }
 
-        product.change(req.name(), req.price(), req.description()); // 영속 엔티티 변경 → dirty checking
+        product.change(req.name(), req.price(), req.description());
         return toResponse(product);
 
     }

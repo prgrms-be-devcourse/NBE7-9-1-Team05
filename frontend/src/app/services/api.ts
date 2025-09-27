@@ -139,7 +139,7 @@ export const tokenUtils = {
 };
 
 // API 요청 헬퍼 함수
-async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
   const defaultHeaders: Record<string, string> = {

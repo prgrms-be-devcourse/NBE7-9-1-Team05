@@ -1,5 +1,6 @@
 package demo.cafemenu.domain.order.controller;
 
+import demo.cafemenu.domain.order.dto.CheckoutRequest;
 import demo.cafemenu.domain.order.dto.OrderDto;
 import demo.cafemenu.domain.order.service.OrderService;
 import demo.cafemenu.global.security.UserDetailsImpl;

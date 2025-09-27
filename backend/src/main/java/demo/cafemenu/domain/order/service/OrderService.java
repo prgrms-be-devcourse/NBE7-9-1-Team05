@@ -111,6 +111,27 @@ public class OrderService {
         }
     }
 
+    private void mergeItems(Order fromPending, Order toPaid) {
+        fromPending.getItems().forEach(pi -> {
+            OrderItem exist = toPaid.getItems().stream()
+                .filter(x -> x.getProductId().equals(pi.getProductId()))
+                .findFirst()
+                .orElse(null);
+
+            if (exist != null) {
+                exist.addQuantity(pi.getQuantity());
+            } else {
+                OrderItem added = OrderItem.builder()
+                    .order(toPaid)
+                    .productId(pi.getProductId())
+                    .unitPrice(pi.getUnitPrice())
+                    .quantity(pi.getQuantity())
+                    .build();
+                toPaid.getItems().add(added);
+            }
+        });
+    }
+
     // PENDING 주문 조회 (없으면 새로 생성)
     private Order getOrder(User user) {
         LocalDate today = LocalDate.now();

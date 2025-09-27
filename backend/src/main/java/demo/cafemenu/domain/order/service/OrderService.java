@@ -2,6 +2,7 @@ package demo.cafemenu.domain.order.service;
 
 import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
 import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
+import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
 import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import demo.cafemenu.domain.order.dto.CheckoutRequest;

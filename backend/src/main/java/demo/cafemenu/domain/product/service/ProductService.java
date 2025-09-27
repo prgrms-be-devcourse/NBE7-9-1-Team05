@@ -1,8 +1,9 @@
 package demo.cafemenu.domain.product.service;
 
 import static demo.cafemenu.global.exception.ErrorCode.DUPLICATE_PRODUCT_NAME;
+import static demo.cafemenu.global.exception.ErrorCode.PRODUCT_NOT_FOUND;
 
-import demo.cafemenu.domain.product.dto.ProductCreateRequest;
+import demo.cafemenu.domain.product.dto.ProductRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;
 import demo.cafemenu.domain.product.entity.Product;
 import demo.cafemenu.domain.product.repository.ProductRepository;
@@ -25,7 +26,7 @@ public class ProductService {
     }
 
     // 제품 등록(관리자)
-    public ProductResponse create(ProductCreateRequest req) {
+    public ProductResponse create(ProductRequest req) {
         if (productRepository.existsByName(req.name())) {
             throw new BusinessException(DUPLICATE_PRODUCT_NAME);
         }
@@ -34,6 +35,20 @@ public class ProductService {
           .price(req.price())
           .description(req.description())
           .build()));
+    }
+
+    // 제품 수정(관리자)
+    public ProductResponse update(Long id, ProductRequest req) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
+
+        if (productRepository.existsByNameAndIdNot(req.name(), id)) {
+            throw new BusinessException(DUPLICATE_PRODUCT_NAME);
+        }
+
+        product.change(req.name(), req.price(), req.description());
+        return toResponse(product);
+
     }
 
     private ProductResponse toResponse(Product p) {

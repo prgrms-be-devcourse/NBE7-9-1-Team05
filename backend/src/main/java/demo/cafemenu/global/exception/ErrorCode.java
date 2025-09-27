@@ -19,6 +19,7 @@ public enum ErrorCode {
   // 403 FORBIDDEN (접근 금지)
 
   // 404 NOT FOUND
+  PAID_ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, "결제된 주문 내역이 없습니다."),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
 
   // 409 CONFLICT

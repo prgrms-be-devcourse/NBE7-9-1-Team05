@@ -33,7 +33,7 @@ public class OrderService {
         User user = userRepository.findById(userId).get();
 
         List<Order> paidOrder = orderRepository
-                .findByUserAndStatus(user, OrderStatus.PAID);
+                .findAllByUserAndStatus(user, OrderStatus.PAID);
         if (paidOrder.isEmpty()) {
             throw new BusinessException(ErrorCode.PAID_ORDERS_NOT_FOUND);
         }

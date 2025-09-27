@@ -48,4 +48,9 @@ public class OrderService {
                 ))
                 .toList();
     }
+
+    // 장바구니(status = PENDING, 특정 Id로 조회)조회
+    public List<Order> getPendingOrdersByUser(Long userId) {
+        return orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
+    }
 }

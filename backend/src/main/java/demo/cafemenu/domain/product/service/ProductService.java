@@ -2,7 +2,7 @@ package demo.cafemenu.domain.product.service;
 
 import static demo.cafemenu.global.exception.ErrorCode.DUPLICATE_PRODUCT_NAME;
 
-import demo.cafemenu.domain.product.dto.ProductCreateRequest;
+import demo.cafemenu.domain.product.dto.ProductRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;
 import demo.cafemenu.domain.product.entity.Product;
 import demo.cafemenu.domain.product.repository.ProductRepository;
@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     // 제품 등록(관리자)
-    public ProductResponse create(ProductCreateRequest req) {
+    public ProductResponse create(ProductRequest req) {
         if (productRepository.existsByName(req.name())) {
             throw new BusinessException(DUPLICATE_PRODUCT_NAME);
         }

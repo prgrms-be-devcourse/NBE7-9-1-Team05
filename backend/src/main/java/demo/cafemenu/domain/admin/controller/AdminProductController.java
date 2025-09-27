@@ -1,6 +1,6 @@
 package demo.cafemenu.domain.admin.controller;
 
-import demo.cafemenu.domain.product.dto.ProductCreateRequest;
+import demo.cafemenu.domain.product.dto.ProductRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;
 import demo.cafemenu.domain.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class AdminProductController {
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ProductResponse create(@Valid @RequestBody ProductCreateRequest req) {
+  public ProductResponse create(@Valid @RequestBody ProductRequest req) {
     return productService.create(req);
   }
 
@@ -35,7 +35,7 @@ public class AdminProductController {
   @PutMapping("/{beanId}")
   @ResponseStatus(HttpStatus.OK)
   public ProductResponse update(@PathVariable Long beanId,
-      @Valid @RequestBody ProductUpdateRequest req) {
+      @Valid @RequestBody ProductRequest req) {
     return productService.update(beanId, req);
   }
 }

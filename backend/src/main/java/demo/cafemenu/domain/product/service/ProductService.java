@@ -1,6 +1,7 @@
 package demo.cafemenu.domain.product.service;
 
 import static demo.cafemenu.global.exception.ErrorCode.DUPLICATE_PRODUCT_NAME;
+import static demo.cafemenu.global.exception.ErrorCode.PRODUCT_NOT_FOUND;
 
 import demo.cafemenu.domain.product.dto.ProductRequest;
 import demo.cafemenu.domain.product.dto.ProductResponse;

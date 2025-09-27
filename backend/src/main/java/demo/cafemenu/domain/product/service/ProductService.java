@@ -40,7 +40,7 @@ public class ProductService {
     // 제품 수정(관리자)
     public ProductResponse update(Long id, ProductRequest req) {
         Product product = productRepository.findById(id)
-            .orElseThrow(new BusinessException(PRODUCT_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND));
 
         if (productRepository.existsByNameAndIdNot(req.name(), id)) {
             throw new BusinessException(DUPLICATE_PRODUCT_NAME);

@@ -23,5 +23,12 @@ public class OrderController {
         List<OrderDto> items = orderService.getPaidOrderByUserId(userId);
         return ResponseEntity.ok(items);
     }
+
+    // 장바구니에 상품 추가
+    @PostMapping("/item/{productId}")
+    public ResponseEntity<Void> addItemToCart(@RequestParam Long userId, @PathVariable Long productId) {
+        orderService.addOrderItem(userId, productId);
+        return ResponseEntity.ok().build();
+    }
 }
 

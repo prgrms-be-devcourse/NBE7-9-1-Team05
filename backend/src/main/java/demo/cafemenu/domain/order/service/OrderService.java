@@ -35,9 +35,9 @@ public class OrderService {
     @Transactional
     public List<OrderDto> getPaidOrder(Long userId) {
         User user = userRepository.findById(userId).get();
-
         List<Order> paidOrder = orderRepository
                 .findAllByUserAndStatus(user, OrderStatus.PAID);
+
         if (paidOrder.isEmpty()) {
             throw new BusinessException(ErrorCode.PAID_ORDERS_NOT_FOUND);
         }
@@ -47,7 +47,7 @@ public class OrderService {
     }
 
     /* 장바구니 상품 추가
-    - 목록 있으면 수량만 추가, 없으면 생성
+    - 목록 있으면 수량만 +1, 없으면 생성
      */
     public void addOrderItem(Long userId, Long productId) {
         Order order = getOrder(userRepository.findById(userId).get());
@@ -64,10 +64,28 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    /* 장바구니 상품 삭제
+    - 목록 있으면 수량만 -1, 없으면 생성
+     */
+    public void removeFromCart(Long userId, Long productId) {
+        User customer = userRepository.findById(userId).get();
+        Order order = (Order) orderRepository.findAllByUserAndStatus(customer, OrderStatus.PENDING);
+        OrderItem existOrderItem = findOrderItem(order, productId);
+
+        if (existOrderItem != null) {
+            existOrderItem.addQuantity(-1);
+            if (existOrderItem.getQuantity() <= 0) {
+                order.getItems().remove(existOrderItem);
+                orderItemRepository.delete(existOrderItem);
+            }
+            order.recalcTotal();
+            orderRepository.save(order);
+        }
+    }
+
     // PENDING 주문 조회 (없으면 새로 생성)
     private Order getOrder(User user) {
         LocalDate today = LocalDate.now();
-
         Optional<Order> order = orderRepository.findByUserAndStatusAndBatchDate(user, OrderStatus.PENDING, today);
 
         if (order.isPresent()) {

@@ -1,10 +1,5 @@
 package demo.cafemenu.domain.order.service;
 
-import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
-import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
-import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
-import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
-
 import demo.cafemenu.domain.order.dto.CheckoutRequest;
 import demo.cafemenu.domain.product.entity.Product;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +14,17 @@ import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import demo.cafemenu.global.exception.BusinessException;
 import demo.cafemenu.global.exception.ErrorCode;
-// import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
+import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
+import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
+import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,6 @@ public class OrderService {
     @Transactional
     public List<OrderDto> getPaidOrder(Long userId) {
         User user = userRepository.findById(userId).get();
-
         List<Order> paidOrder = orderRepository
                 .findAllByUserAndStatus(user, PAID);
         if (paidOrder.isEmpty()) {
@@ -54,7 +52,7 @@ public class OrderService {
     }
 
     /* 장바구니 상품 추가
-    - 목록 있으면 수량만 추가, 없으면 생성
+    - 목록 있으면 수량만 +1, 없으면 생성
      */
     public void addOrderItem(Long userId, Long productId) {
         Order order = getOrder(userRepository.findById(userId).get());
@@ -69,6 +67,25 @@ public class OrderService {
         }
         order.recalcTotal();
         orderRepository.save(order);
+    }
+
+    /* 장바구니 상품 삭제
+    - 목록 있으면 수량만 -1, 없으면 생성
+     */
+    public void removeFromCart(Long userId, Long productId) {
+        User customer = userRepository.findById(userId).get();
+        Order order = (Order) orderRepository.findAllByUserAndStatus(customer, PENDING);
+        OrderItem existOrderItem = findOrderItem(order, productId);
+
+        if (existOrderItem != null) {
+            existOrderItem.addQuantity(-1);
+            if (existOrderItem.getQuantity() <= 0) {
+                order.getItems().remove(existOrderItem);
+                orderItemRepository.delete(existOrderItem);
+            }
+            order.recalcTotal();
+            orderRepository.save(order);
+        }
     }
 
     /**
@@ -139,7 +156,6 @@ public class OrderService {
     // PENDING 주문 조회 (없으면 새로 생성)
     private Order getOrder(User user) {
         LocalDate today = LocalDate.now();
-
         Optional<Order> order = orderRepository.findByUserAndStatusAndBatchDate(user, PENDING, today);
 
         if (order.isPresent()) {

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import java.util.List;
 
@@ -40,6 +43,14 @@ public class OrderController {
     public ResponseEntity<Void> addItemToCart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId) {
         Long userId = userDetails.getId();
         orderService.addOrderItem(userId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 장바구니에 해당 상품 수량 삭제
+    @DeleteMapping("/item/{productId}")
+    public ResponseEntity<Void> removeFromCart (@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId){
+        Long userId = userDetails.getId();
+        orderService.removeFromCart(userId, productId);
         return ResponseEntity.ok().build();
     }
 

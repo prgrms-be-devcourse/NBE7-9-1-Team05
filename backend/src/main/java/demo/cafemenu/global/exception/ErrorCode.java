@@ -23,6 +23,7 @@ public enum ErrorCode {
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
   PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
   PENDING_ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, "결제할 장바구니가 없습니다."),
+  PENDING_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니 내 해당 상품이 없습니다."),
 
   // 409 CONFLICT
   DUPLICATE_PRODUCT_NAME(HttpStatus.CONFLICT, "이미 존재하는 상품명입니다."),

@@ -38,7 +38,8 @@ public class OrderController {
 
     // 장바구니에 해당 상품 수량 삭제
     @DeleteMapping("/item/{productId}")
-    public ResponseEntity<Void> removeFromCart (@RequestParam Long userId, @PathVariable Long productId){
+    public ResponseEntity<Void> removeFromCart (@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId){
+        Long userId = userDetails.getId();
         orderService.removeFromCart(userId, productId);
         return ResponseEntity.ok().build();
     }

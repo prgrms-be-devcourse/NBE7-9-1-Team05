@@ -1,5 +1,6 @@
 package demo.cafemenu.domain.order.dto;
 
+import demo.cafemenu.domain.order.entity.Order;
 import demo.cafemenu.domain.order.entity.OrderStatus;
 import lombok.Getter;
 
@@ -22,5 +23,15 @@ public class OrderDto {
         this.batchDate = batchDate;
         this.totalAmount = totalAmount;
         this.status = status;
+    }
+
+    public static OrderDto from(Order order) {
+        return new OrderDto(
+                order.getId(),
+                order.getUser().getEmail(),
+                order.getBatchDate(),
+                order.getTotalAmount(),
+                order.getStatus()
+        );
     }
 }

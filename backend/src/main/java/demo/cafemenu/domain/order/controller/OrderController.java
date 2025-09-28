@@ -18,17 +18,19 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/{userId}/order")
-    public ResponseEntity<List<OrderDto>> getPaidOrderByUserId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    // 주문내역 조회
+    @GetMapping("/order")
+    public ResponseEntity<List<OrderDto>> getPaidOrder(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
-        List<OrderDto> items = orderService.getPaidOrderByUserId(userId);
+        List<OrderDto> items = orderService.getPaidOrder(userId);
         return ResponseEntity.ok(items);
     }
 
-    @GetMapping("/order/cart")
-    public List<OrderDto> getPendingOrdersByUser(){
-        Long userId = 1L;
-        return orderService.getPendingOrdersByUser(userId);
+    // 장바구니에 상품 추가
+    @PostMapping("/item/{productId}")
+    public ResponseEntity<Void> addItemToCart(@RequestParam Long userId, @PathVariable Long productId) {
+        orderService.addOrderItem(userId, productId);
+        return ResponseEntity.ok().build();
     }
 }
 

@@ -21,6 +21,7 @@ public enum ErrorCode {
   // 404 NOT FOUND
   PAID_ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, "결제된 주문 내역이 없습니다."),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+  PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
 
   // 409 CONFLICT
   DUPLICATE_PRODUCT_NAME(HttpStatus.CONFLICT, "이미 존재하는 상품명입니다."),

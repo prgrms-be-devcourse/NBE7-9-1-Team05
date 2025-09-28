@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { ROLES } from '../utils/roles';
+import { ROLES } from '../services/api';
 import Image from "next/image";
 
 export default function LoginPage() {
@@ -23,7 +23,7 @@ export default function LoginPage() {
       const userInfo = await login(trimmedEmail, trimmedPassword);
       
       if (userInfo) {
-        const isAdmin = userInfo.roles?.includes(ROLES.ADMIN);
+        const isAdmin = userInfo.role === ROLES.ADMIN;
         alert(`로그인 성공! (${isAdmin ? '관리자' : '사용자'} 권한)`);
         router.push(isAdmin ? '/admin/dashboard' : '/user');
       } else {

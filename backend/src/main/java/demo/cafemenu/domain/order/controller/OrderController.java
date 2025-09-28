@@ -1,9 +1,12 @@
 package demo.cafemenu.domain.order.controller;
 
+import demo.cafemenu.domain.order.dto.CheckoutRequest;
 import demo.cafemenu.domain.order.dto.OrderDto;
 import demo.cafemenu.domain.order.service.OrderService;
 import demo.cafemenu.global.security.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +38,17 @@ public class OrderController {
 
     // 장바구니에 해당 상품 수량 삭제
     @DeleteMapping("/item/{productId}")
-    public ResponseEntity<Void> deleteOrderItem (@RequestParam Long userId, @PathVariable Long productId){
+    public ResponseEntity<Void> removeFromCart (@RequestParam Long userId, @PathVariable Long productId){
         orderService.removeFromCart(userId, productId);
         return ResponseEntity.ok().build();
+    }
+
+    // 사용자의 모든 PENDING 주문을 결제 처리
+    @PostMapping("/orders/checkout")
+    @ResponseStatus(HttpStatus.OK)
+    public void checkoutAll(@AuthenticationPrincipal UserDetailsImpl principal,
+        @Valid @RequestBody CheckoutRequest request) {
+        orderService.checkoutAllPending(principal.getId(), request);
     }
 }
 

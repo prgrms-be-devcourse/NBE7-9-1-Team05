@@ -14,7 +14,6 @@ import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import demo.cafemenu.global.exception.BusinessException;
 import demo.cafemenu.global.exception.ErrorCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

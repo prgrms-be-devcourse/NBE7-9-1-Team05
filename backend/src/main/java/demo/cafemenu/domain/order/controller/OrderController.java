@@ -26,8 +26,8 @@ public class OrderController {
     }
 
     @GetMapping("/order/cart")
-    public List<Order> getPendingOrdersByUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        Long userId = userDetails.getId();
+    public List<OrderDto> getPendingOrdersByUser(){
+        Long userId = 1L;
         return orderService.getPendingOrdersByUser(userId);
     }
 }

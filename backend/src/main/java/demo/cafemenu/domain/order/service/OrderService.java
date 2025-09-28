@@ -1,6 +1,9 @@
 package demo.cafemenu.domain.order.service;
 
+import demo.cafemenu.domain.product.entity.Product;
+import org.springframework.transaction.annotation.Transactional;
 import demo.cafemenu.domain.order.dto.OrderDto;
+import demo.cafemenu.domain.order.dto.OrderItemDto;
 import demo.cafemenu.domain.order.entity.Order;
 import demo.cafemenu.domain.order.entity.OrderStatus;
 import demo.cafemenu.domain.order.repository.OrderItemRepository;
@@ -10,7 +13,7 @@ import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import demo.cafemenu.global.exception.BusinessException;
 import demo.cafemenu.global.exception.ErrorCode;
-import jakarta.transaction.Transactional;
+// import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +53,42 @@ public class OrderService {
     }
 
     // 장바구니(status = PENDING, 특정 Id로 조회)조회
-    public List<Order> getPendingOrdersByUser(Long userId) {
-        return orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
+    @Transactional(readOnly = true)
+    public List<OrderDto> getPendingOrdersByUser(Long userId) {
+        List<Order> orders = orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
+
+        return orders.stream()
+                .map(order -> {
+                    // DTO 생성
+                    OrderDto dto = new OrderDto(
+                            order.getId(),
+                            order.getUser().getEmail(),
+                            order.getBatchDate(),
+                            order.getTotalAmount(),
+                            order.getStatus()
+                    );
+
+                    List<OrderItemDto> itemDtos = order.getItems().stream()
+                            .map(item -> {
+                                String productName = productRepository.findById(item.getProductId())
+                                        .map(Product::getName)
+                                        .orElse("Unknown Product");
+
+                                return new OrderItemDto(
+                                        item.getId(),
+                                        item.getProductId(),
+                                        productName,
+                                        item.getUnitPrice(),
+                                        item.getQuantity(),
+                                        item.getLineAmount()
+                                );
+                            })
+                            .toList();
+
+                    dto.getItems().addAll(itemDtos);
+
+                    return dto;
+                })
+                .toList();
     }
 }

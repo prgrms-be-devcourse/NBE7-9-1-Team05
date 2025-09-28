@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { productApi } from '../../services/productApi';
+import { productApi } from '../../services/productService';
 import { Product, ProductRequest } from '../../services/api';
-import { adminProductApi } from '../../services/adminProductApi';
+import { adminProductApi } from '../../services/adminProductService';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function AdminProductsPage() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, isAdmin } = useAuth();
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export default function AdminProductsPage() {
         setError("제품 목록을 불러오는 중 오류가 발생했습니다.");
       }
     } catch (err) {
-      console.error('Admin products fetch error:', err);
+      // Admin products fetch error
       loadDummyData();
       setError("제품 목록을 불러오는 중 오류가 발생했습니다.");
     } finally {
@@ -69,11 +71,18 @@ export default function AdminProductsPage() {
   };
 
   useEffect(() => {
+    // 관리자 권한 체크
+    if (!authLoading && (!isAuthenticated || !isAdmin)) {
+      alert('관리자 권한이 필요합니다.');
+      router.push('/login');
+      return;
+    }
+    
     // AuthContext의 로딩이 완료된 후에만 fetchProducts 실행
-    if (!authLoading) {
+    if (!authLoading && isAuthenticated && isAdmin) {
       fetchProducts();
     }
-  }, [authLoading, isAuthenticated]);
+  }, [authLoading, isAuthenticated, isAdmin, router]);
 
   // 새 상품 추가 핸들러 (폼 제출 시)
   const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -253,7 +262,7 @@ export default function AdminProductsPage() {
       setEditingProduct(null);
       alert('상품이 로컬에서 수정되었습니다!');
     } catch (error) {
-      console.error('상품 수정 중 예상치 못한 오류:', error);
+      // 상품 수정 중 예상치 못한 오류
       alert('상품 수정 중 오류가 발생했습니다.');
     }
   };
@@ -277,7 +286,7 @@ export default function AdminProductsPage() {
       
       alert('상품이 성공적으로 삭제되었습니다.');
     } catch (error) {
-      console.error('상품 삭제 실패:', error);
+      // 상품 삭제 실패
       alert('상품 삭제 중 오류가 발생했습니다.');
     }
   };

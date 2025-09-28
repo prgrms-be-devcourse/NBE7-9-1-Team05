@@ -1,14 +1,15 @@
 package demo.cafemenu.global.config;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import demo.cafemenu.domain.product.entity.Product;
 import demo.cafemenu.domain.product.repository.ProductRepository;
 import demo.cafemenu.domain.user.entity.Role;
 import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

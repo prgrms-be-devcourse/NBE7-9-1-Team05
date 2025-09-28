@@ -1,15 +1,20 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useAuth } from './context/AuthContext';
 
 export default function WelcomePage() {
   const router = useRouter();
-
-  const isLoggedIn = false;
+  const { isAuthenticated, isAdmin } = useAuth();
   
   const handleBrowseClick = () => {
-    if (isLoggedIn) {
-      router.push('/user');
+    if (isAuthenticated) {
+      // 로그인된 사용자는 역할에 따라 적절한 페이지로 이동
+      if (isAdmin) {
+        router.push('/user'); // 관리자도 사용자 페이지에서 상품을 볼 수 있음
+      } else {
+        router.push('/user');
+      }
     } else {
       alert("로그인이 필요합니다.");
       router.push('/login');

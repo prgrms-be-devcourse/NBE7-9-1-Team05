@@ -3,6 +3,7 @@ package demo.cafemenu.domain.order.controller;
 import demo.cafemenu.domain.order.dto.CheckoutRequest;
 import demo.cafemenu.domain.order.dto.OrderDto;
 import demo.cafemenu.domain.order.service.OrderService;
+import demo.cafemenu.global.security.*;
 import demo.cafemenu.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -36,7 +37,8 @@ public class OrderController {
 
     // 장바구니에 상품 추가
     @PostMapping("/item/{productId}")
-    public ResponseEntity<Void> addItemToCart(@RequestParam Long userId, @PathVariable Long productId) {
+    public ResponseEntity<Void> addItemToCart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId) {
+        Long userId = userDetails.getId();
         orderService.addOrderItem(userId, productId);
         return ResponseEntity.ok().build();
     }

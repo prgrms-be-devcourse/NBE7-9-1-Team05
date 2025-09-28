@@ -1,29 +1,30 @@
 package demo.cafemenu.domain.order.service;
 
+import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
+import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
+import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
+import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
+
 import demo.cafemenu.domain.order.dto.CheckoutRequest;
-import demo.cafemenu.domain.product.entity.Product;
-import org.springframework.transaction.annotation.Transactional;
 import demo.cafemenu.domain.order.dto.OrderDto;
 import demo.cafemenu.domain.order.dto.OrderItemDto;
 import demo.cafemenu.domain.order.entity.Order;
 import demo.cafemenu.domain.order.entity.OrderItem;
 import demo.cafemenu.domain.order.entity.OrderStatus;
+import demo.cafemenu.domain.order.repository.OrderItemRepository;
 import demo.cafemenu.domain.order.repository.OrderRepository;
+import demo.cafemenu.domain.product.entity.Product;
 import demo.cafemenu.domain.product.repository.ProductRepository;
 import demo.cafemenu.domain.user.entity.User;
 import demo.cafemenu.domain.user.reposiitory.UserRepository;
 import demo.cafemenu.global.exception.BusinessException;
 import demo.cafemenu.global.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
-import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
-import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
-import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderItemRepository orderItemRepository;
 
     /* 주문 내역 조회
     - status가 PAID인 것만

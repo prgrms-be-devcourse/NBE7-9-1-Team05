@@ -32,5 +32,13 @@ public class OrderController {
         orderService.addOrderItem(userId, productId);
         return ResponseEntity.ok().build();
     }
+
+    // 장바구니 조회
+    @GetMapping("/order/cart")
+    public List<OrderDto> getPendingOrdersByUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long userId = userDetails.getId();
+        return orderService.getPendingOrdersByUser(userId);
+    }
+
 }
 

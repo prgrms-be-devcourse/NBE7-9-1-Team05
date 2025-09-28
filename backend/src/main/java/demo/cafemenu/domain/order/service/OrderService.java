@@ -103,4 +103,44 @@ public class OrderService {
                 .build();
     }
 
+    // 장바구니(status = PENDING, 특정 Id로 조회)조회
+    @Transactional(readOnly = true)
+    public List<OrderDto> getPendingOrdersByUser(Long userId) {
+        List<Order> orders = orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
+
+        return orders.stream()
+                .map(order -> {
+                    // DTO 생성
+                    OrderDto dto = new OrderDto(
+                            order.getId(),
+                            order.getUser().getEmail(),
+                            order.getBatchDate(),
+                            order.getTotalAmount(),
+                            order.getStatus()
+                    );
+
+                    List<OrderItemDto> itemDtos = order.getItems().stream()
+                            .map(item -> {
+                                String productName = productRepository.findById(item.getProductId())
+                                        .map(Product::getName)
+                                        .orElse("Unknown Product");
+
+                                return new OrderItemDto(
+                                        item.getId(),
+                                        item.getProductId(),
+                                        productName,
+                                        item.getUnitPrice(),
+                                        item.getQuantity(),
+                                        item.getLineAmount()
+                                );
+                            })
+                            .toList();
+
+                    dto.getItems().addAll(itemDtos);
+
+                    return dto;
+                })
+                .toList();
+    }
+
 }

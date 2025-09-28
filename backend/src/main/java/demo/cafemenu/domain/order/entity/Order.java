@@ -86,4 +86,9 @@ public class Order extends BaseTimeEntity {
   public void changeStatus(OrderStatus status) {
     this.status = status;
   }
+
+  public void updateShipping(String address, String postcode) {
+    this.shippingAddress = address;
+    this.shippingPostcode = postcode;
+  }
 }

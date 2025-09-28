@@ -1,139 +1,75 @@
 "use client";
 
-import { useCart } from '../context/CartContext';
-import OrderStatusDisplay from '../components/OrderStatusDisplay';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ROLES, OrderStatus, ORDER_STATUS } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminPage() {
-  const { orders, updateOrderStatus } = useCart();
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const { isAuthenticated, isAdmin } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    // 클라이언트 사이드에서만 localStorage 접근
-    if (typeof window !== 'undefined') {
-      const role = localStorage.getItem('userRole');
-      setUserRole(role);
-      
-      // 관리자 권한이 없으면 메인 페이지로 리다이렉트
-      if (role !== ROLES.ADMIN) {
-        alert('관리자 권한이 필요합니다.');
-        router.push('/');
-      }
-    }
-  }, [router]);
-  
-  // 고객별로 주문을 그룹화 (이메일 + 날짜 기준)
-  const groupedOrders = orders.reduce((acc, order) => {
-    const date = order.orderDate?.toDateString() || new Date().toDateString();
-    const key = `${order.email || 'Unknown'}-${date}`;
-    
-    if (!acc[key]) {
-      acc[key] = {
-        customerEmail: order.email || 'Unknown',
-        orderDate: order.orderDate || new Date(),
-        orders: [],
-        totalAmount: 0,
-        status: order.status as OrderStatus
-      };
-    }
-    
-    acc[key].orders.push(order);
-    acc[key].totalAmount += order.totalAmount;
-    
-    return acc;
-  }, {} as Record<string, {
-    customerEmail: string;
-    orderDate: Date;
-    orders: typeof orders;
-    totalAmount: number;
-    status: OrderStatus;
-  }>);
-
-  const handleStatusChange = (orderId: number, newStatus: OrderStatus) => {
-    updateOrderStatus(orderId, newStatus);
-    alert(`주문 상태가 ${newStatus === ORDER_STATUS.PAID ? '결제완료' : '생성/결제대기'}로 변경되었습니다.`);
-  };
-
-  // 관리자 권한이 없으면 로딩 표시
-  if (userRole !== ROLES.ADMIN) {
-    return (
-      <div className="container-fluid text-center">
-        <h2>권한 확인 중...</h2>
-      </div>
-    );
-  }
 
   return (
     <div className="container-fluid">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>주문 관리</h1>
-        <Link href="/admin/dashboard" className="btn btn-outline-primary">
-          대시보드로 돌아가기
+      {/* 헤더 */}
+      <div className="d-flex justify-content-between align-items-center mb-5">
+        <div>
+          <h1 className="mb-1">관리자 대시보드</h1>
+          <p className="text-muted mb-0">카페 메뉴 관리 시스템</p>
+        </div>
+        <Link href="/" className="btn btn-outline-secondary">
+          <i className="bi bi-house me-1"></i>
+          홈으로
         </Link>
       </div>
       
-      {Object.keys(groupedOrders).length === 0 ? (
-        <div className="alert alert-info text-center" role="alert">
-          아직 주문이 없습니다.
+      {/* 메인 기능 카드 */}
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-5 text-center">
+              <div className="mb-4">
+                <i className="bi bi-box-seam text-primary" style={{ fontSize: '4rem' }}></i>
+              </div>
+              <h3 className="card-title mb-3">상품 관리</h3>
+              <p className="card-text text-muted mb-4">
+                카페 메뉴 상품을 등록, 수정, 삭제할 수 있습니다.<br />
+                관리자가 등록한 상품은 사용자들이 주문할 수 있습니다.
+              </p>
+              <div className="d-grid gap-2 d-md-flex justify-content-md-center">
+                <Link href="/admin/products" className="btn btn-primary btn-lg px-4">
+                  <i className="bi bi-gear me-2"></i>
+                  상품 관리 시작하기
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="row">
-          {Object.entries(groupedOrders).map(([key, group]) => (
-            <div key={key} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">고객: {group.customerEmail}</h5>
-                  <small className="text-muted">{group.orderDate.toLocaleDateString()}</small>
-                </div>
-                <div className="card-body">
-                  <div className="mb-3">
-                    <OrderStatusDisplay status={group.status} />
-                  </div>
-                  
-                  <p className="mb-2"><strong>총 금액:</strong> {group.totalAmount.toLocaleString()}원</p>
-                  <p className="mb-3"><strong>주문 수:</strong> {group.orders.length}개</p>
-                  
-                  <div className="mb-3">
-                    <h6>주문 상품:</h6>
-                    <div className="list-group list-group-flush">
-                      {group.orders.map((order) => (
-                        <div key={order.id} className="list-group-item">
-                          <div className="d-flex justify-content-between">
-                            <span>주문 #{order.id}</span>
-                            <span>{order.totalAmount.toLocaleString()}원</span>
-                          </div>
-                          <div className="mt-2">
-                            {order.items.map((item) => (
-                              <div key={item.id} className="d-flex justify-content-between">
-                                <span>상품 ID: {item.productId}</span>
-                                <span>{item.quantity}개</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="d-flex gap-2">
-                    <button 
-                      className="btn btn-success btn-sm"
-                      onClick={() => handleStatusChange(group.orders[0].id, ORDER_STATUS.PAID)}
-                      disabled={group.status === ORDER_STATUS.PAID}
-                    >
-                      결제완료
-                    </button>
-                  </div>
+      </div>
+      
+      {/* 기능 안내 */}
+      <div className="row mt-5">
+        <div className="col-12">
+          <div className="card border-0 bg-light">
+            <div className="card-body p-4">
+              <h5 className="card-title mb-3">
+                <i className="bi bi-info-circle text-primary me-2"></i>
+                관리 기능 안내
+              </h5>
+              <div className="row justify-content-center">
+                <div className="col-md-8">
+                  <h6 className="text-success">✅ 사용 가능한 기능</h6>
+                  <ul className="list-unstyled">
+                    <li><i className="bi bi-check-circle text-success me-2"></i>상품 등록 및 수정</li>
+                    <li><i className="bi bi-check-circle text-success me-2"></i>상품 삭제</li>
+                    <li><i className="bi bi-check-circle text-success me-2"></i>상품 목록 조회</li>
+                  </ul>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

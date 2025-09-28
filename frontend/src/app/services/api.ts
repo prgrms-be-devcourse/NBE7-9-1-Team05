@@ -23,44 +23,63 @@ export type OrderStatus = typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 
 // 타입 정의
 export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
+  id: number;           // Product.id (Long)
+  name: string;         // Product.name (String, max 120)
+  price: number;         // Product.price (Integer)
+  description: string;   // Product.description (String, max 1000)
 }
 
 export interface CartItem {
-  id?: number;
-  productId: number;
-  unitPrice: number;
-  quantity: number;
-  lineAmount: number;
-  status?: string;
+  id?: number;           // OrderItem.id (Long, optional for new items)
+  productId: number;     // OrderItem.productId (Long)
+  unitPrice: number;     // OrderItem.unitPrice (Integer)
+  quantity: number;      // OrderItem.quantity (Integer)
+  lineAmount: number;    // OrderItem.getLineAmount() (unitPrice * quantity)
+  status?: string;       // UI에서 사용하는 상태 (pending/paid)
 }
 
+// 백엔드 주문 정보와 일치하는 Order 인터페이스
 export interface Order {
-  id: number;
-  userId: number;
-  batchDate: string;
-  status: OrderStatus;
-  totalAmount: number;
-  shippingAddress?: string;
-  shippingPostcode?: string;
-  items: CartItem[];
-  email?: string;
-  orderDate?: Date;
+  orderId: number;        // 주문 ID
+  email: string;          // 고객 이메일
+  batchDate: string;      // 주문일 (YYYY-MM-DD)
+  totalAmount: number;    // 총 금액
+  status: string;         // 주문 상태 ("PAID", "PENDING" 등)
+}
+
+// UI에서 사용하는 확장된 Order 인터페이스 (주문 내역 표시용)
+export interface OrderWithDetails extends Order {
+  userId?: number;        // Order.user.id
+  shippingAddress?: string; // Order.shippingAddress
+  shippingPostcode?: string; // Order.shippingPostcode
+  items?: CartItem[];      // Order.items (List<OrderItem>)
+  orderDate?: Date;       // UI에서 사용하는 주문일
 }
 
 export interface UserInfo {
-  id: number;
-  email: string;
-  role: string;
-  name: string;
+  id: number;           // User.id (Long)
+  email: string;        // User.email (String, unique)
+  role: string;         // User.role (Role enum)
+  name: string;         // User.name (String)
+  password?: string;    // User.password (회원가입 시에만 사용)
 }
 
 export interface LoginRequest {
   email: string;
   password: string;
+}
+
+// 회원가입 요청 (SignupRequest와 일치)
+export interface SignupRequest {
+  email: string;        // @Email @NotBlank
+  password: string;      // @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$])[A-Za-z\\d!@#$]{8,}$")
+  name: string;         // @Size(min = 2, max = 20) @NotBlank
+}
+
+// 결제 요청 (CheckoutRequest와 일치)
+export interface CheckoutRequest {
+  shippingAddress: string;   // @NotBlank @Size(max = 200)
+  shippingPostcode: string;  // @NotBlank @Pattern(regexp = "\\d{5}")
 }
 
 export interface LoginResponse {
@@ -164,13 +183,13 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
 
     if (!response.ok) {
       let errorMessage = `HTTP error! status: ${response.status}`;
+      
       if (response.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
         localStorage.removeItem('addedProducts');
         errorMessage = 'Session expired. Please log in again.';
         
-        // 자동 로그아웃 처리
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
@@ -180,24 +199,19 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
         const errorData = await response.json();
         errorMessage = errorData.message || errorData.error || errorMessage;
       } catch (e) {
-        try {
-          const errorText = await response.text();
-          if (errorText) errorMessage = errorText;
-        } catch (textError) {
-          // 텍스트 파싱 실패 시 기본 메시지 사용
-        }
+        // JSON 파싱 실패 시 기본 메시지 사용
       }
 
       throw new Error(errorMessage);
     }
 
+    // 응답이 비어있는 경우 (204 No Content 등)
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+      return null as T;
+    }
+    
     return await response.json();
   } catch (error) {
-    console.error('API request failed:', {
-      url: `${API_BASE_URL}${endpoint}`,
-      method: options.method || 'GET',
-      error: error instanceof Error ? error.message : String(error),
-    });
     throw error;
   }
 }
@@ -223,64 +237,71 @@ export async function wrappedApiRequest<T>(endpoint: string, options: RequestIni
 // 인증 관련 API
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    try {
-      const response = await apiRequest<LoginResponse>('/api/user/login', {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-      });
-      return response;
-    } catch (error) {
-      console.error('Login API failed:', error);
-      throw error;
-    }
+    return await apiRequest<LoginResponse>('/api/user/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+  },
+
+  signup: async (userData: SignupRequest): Promise<ApiResponse<UserInfo>> => {
+    return await wrappedApiRequest<UserInfo>('/api/user/signup', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
   },
 };
 
-// 주문 관련 API
-export const orderApi = {
-  getAllOrders: async (): Promise<ApiResponse<Order[]>> => {
-    try {
-      return await wrappedApiRequest<Order[]>('/api/orders');
-    } catch (error) {
-      console.error('Get all orders API failed:', error);
-      throw error;
-    }
-  },
-
-  createOrder: async (orderData: {
-    items: CartItem[];
-    totalAmount: number;
-    shippingAddress?: string;
-  }): Promise<ApiResponse<Order>> => {
-    try {
-      return await wrappedApiRequest<Order>('/api/orders', {
-        method: 'POST',
-        body: JSON.stringify(orderData),
-      });
-    } catch (error) {
-      console.error('Create order API failed:', error);
-      throw error;
-    }
-  },
-};
+// 주문 관련 API는 orderApi.ts로 분리됨 (현재 제거됨)
 
 // 상품 관련 API
 export const productApi = {
   getAllProducts: async (): Promise<ApiResponse<Product[]>> => {
-    try {
-      return await wrappedApiRequest<Product[]>('/api/user/beans');
-    } catch (error) {
-      console.error('Get all products API failed:', error);
-      throw error;
-    }
+    return await wrappedApiRequest<Product[]>('/api/user/beans');
   },
 
   getProductById: async (productId: number): Promise<ApiResponse<Product>> => {
+    return await wrappedApiRequest<Product>(`/api/products/${productId}`);
+  },
+};
+
+// 장바구니 관련 API
+export const cartApi = {
+  addItem: async (productId: number): Promise<ApiResponse<null>> => {
+    return await wrappedApiRequest<null>(`/api/user/item/${productId}`, {
+      method: 'POST',
+    });
+  },
+  
+  removeItem: async (productId: number): Promise<ApiResponse<null>> => {
+    return await wrappedApiRequest<null>(`/api/user/item/${productId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// 체크아웃 관련 API
+export const checkoutApi = {
+  checkout: async (checkoutData: CheckoutRequest): Promise<ApiResponse<null>> => {
+    return await wrappedApiRequest<null>('/api/user/orders/checkout', {
+      method: 'POST',
+      body: JSON.stringify(checkoutData),
+    });
+  },
+};
+
+// 주문 내역 관련 API
+export const orderHistoryApi = {
+  getUserOrders: async (): Promise<ApiResponse<Order[]>> => {
     try {
-      return await wrappedApiRequest<Product>(`/api/products/${productId}`);
+      return await wrappedApiRequest<Order[]>('/api/user/order');
     } catch (error) {
-      console.error('Get product by ID API failed:', error);
-      throw error;
+      console.error('Get user orders API failed:', error);
+      // API 실패 시 빈 배열 반환
+      return {
+        data: [],
+        success: false,
+        message: '주문 내역을 불러올 수 없습니다.',
+      };
     }
   },
 };

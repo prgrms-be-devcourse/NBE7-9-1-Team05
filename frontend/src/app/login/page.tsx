@@ -25,12 +25,12 @@ export default function LoginPage() {
       if (userInfo) {
         const isAdmin = userInfo.role === ROLES.ADMIN;
         alert(`로그인 성공! (${isAdmin ? '관리자' : '사용자'} 권한)`);
-        router.push(isAdmin ? '/admin/dashboard' : '/user');
+        router.push(isAdmin ? '/admin' : '/user');
       } else {
         setLoginError("이메일 또는 비밀번호가 일치하지 않습니다.");
       }
     } catch (error) {
-      console.error('Login error:', error);
+      // 로그인 오류 처리
       setLoginError("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <div className="container-fluid" style={{ height: 'calc(100vh - 56px)' }}>
       <div className="row g-0 h-100">
-        {/* Image Column */}
+        {/* 이미지 컬럼 */}
         <div className="col-md-6 col-lg-7 d-none d-md-block">
           <Image
             src="/images/coffee-wholebean.png"
@@ -49,7 +49,7 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* Form Column */}
+        {/* 폼 컬럼 */}
         <div className="col-md-6 col-lg-5 d-flex align-items-center justify-content-center bg-light">
           <div className="w-100" style={{ maxWidth: '400px' }}>
             <div className="card-body p-4 p-sm-5">

@@ -2,8 +2,7 @@ package demo.cafemenu.domain.order.service;
 
 import static demo.cafemenu.domain.order.entity.OrderStatus.PAID;
 import static demo.cafemenu.domain.order.entity.OrderStatus.PENDING;
-import static demo.cafemenu.global.exception.ErrorCode.PENDING_ORDERS_NOT_FOUND;
-import static demo.cafemenu.global.exception.ErrorCode.USER_NOT_FOUND;
+import static demo.cafemenu.global.exception.ErrorCode.*;
 
 import demo.cafemenu.domain.order.dto.CheckoutRequest;
 import demo.cafemenu.domain.order.dto.OrderDto;
@@ -75,17 +74,26 @@ public class OrderService {
      */
     public void removeFromCart(Long userId, Long productId) {
         User customer = userRepository.findById(userId).get();
-        Order order = (Order) orderRepository.findAllByUserAndStatus(customer, PENDING);
-        OrderItem existOrderItem = findOrderItem(order, productId);
+        List<Order> orders = orderRepository.findAllByUserAndStatus(customer, PENDING);
+        boolean isExist = false;
 
-        if (existOrderItem != null) {
-            existOrderItem.addQuantity(-1);
-            if (existOrderItem.getQuantity() <= 0) {
-                order.getItems().remove(existOrderItem);
-                orderItemRepository.delete(existOrderItem);
+        for (Order order : orders) {
+            OrderItem existOrderItem = findOrderItem(order, productId);
+
+            if (existOrderItem != null) {
+                existOrderItem.addQuantity(-1);
+                if (existOrderItem.getQuantity() <= 0) {
+                    order.getItems().remove(existOrderItem);
+                    orderItemRepository.delete(existOrderItem);
+                }
+                order.recalcTotal();
+                orderRepository.save(order);
+                isExist = true;
+                break;
             }
-            order.recalcTotal();
-            orderRepository.save(order);
+        }
+        if (!isExist) {
+            throw new BusinessException(PENDING_PRODUCT_NOT_FOUND);
         }
     }
 

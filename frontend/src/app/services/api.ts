@@ -1,87 +1,91 @@
 import { jwtDecode } from "jwt-decode";
 
-// API 기본 설정
+// 백엔드 API 서버 URL
 const API_BASE_URL = "http://localhost:8080";
 
-// 백엔드 Role enum과 일치하는 상수
+// 사용자 역할 상수
 export const ROLES = {
-  USER: 'ROLE_USER',    // 일반 유저 (user@test.com)
-  ADMIN: 'ROLE_ADMIN'   // 관리자 (admin@test.com)
+  USER: 'ROLE_USER',
+  ADMIN: 'ROLE_ADMIN'
 } as const;
 
-// 백엔드 Role enum 타입
+// 사용자 역할 타입
 export type Role = typeof ROLES[keyof typeof ROLES];
 
-// 백엔드 OrderStatus enum과 일치하는 상수 (CANCELLED 제외)
+// 주문 상태 상수
 export const ORDER_STATUS = {
-  PENDING: 'PENDING',   // 생성/결제대기
-  PAID: 'PAID'          // 결제완료
+  PENDING: 'PENDING',
+  PAID: 'PAID'
 } as const;
 
-// 백엔드 OrderStatus enum 타입
+// 주문 상태 타입
 export type OrderStatus = typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 
-// 타입 정의
+// 상품 정보 인터페이스
 export interface Product {
-  id: number;           // Product.id (Long)
-  name: string;         // Product.name (String, max 120)
-  price: number;         // Product.price (Integer)
-  description: string;   // Product.description (String, max 1000)
+  id: number;
+  name: string;
+  price: number;
+  description: string;
 }
 
+// 장바구니 아이템 인터페이스
 export interface CartItem {
-  id?: number;           // OrderItem.id (Long, optional for new items)
-  productId: number;     // OrderItem.productId (Long)
-  unitPrice: number;     // OrderItem.unitPrice (Integer)
-  quantity: number;      // OrderItem.quantity (Integer)
-  lineAmount: number;    // OrderItem.getLineAmount() (unitPrice * quantity)
-  status?: string;       // UI에서 사용하는 상태 (pending/paid)
+  id?: number;
+  productId: number;
+  unitPrice: number;
+  quantity: number;
+  lineAmount: number;
+  status?: string;
 }
 
-// 백엔드 주문 정보와 일치하는 Order 인터페이스
+// 주문 정보 인터페이스
 export interface Order {
-  orderId: number;        // 주문 ID
-  email: string;          // 고객 이메일
-  batchDate: string;      // 주문일 (YYYY-MM-DD)
-  totalAmount: number;    // 총 금액
-  status: string;         // 주문 상태 ("PAID", "PENDING" 등)
+  orderId: number;
+  email: string;
+  batchDate: string;
+  totalAmount: number;
+  status: string;
 }
 
-// UI에서 사용하는 확장된 Order 인터페이스 (주문 내역 표시용)
+// 확장된 주문 정보 인터페이스 (주문 내역 표시용)
 export interface OrderWithDetails extends Order {
-  userId?: number;        // Order.user.id
-  shippingAddress?: string; // Order.shippingAddress
-  shippingPostcode?: string; // Order.shippingPostcode
-  items?: CartItem[];      // Order.items (List<OrderItem>)
-  orderDate?: Date;       // UI에서 사용하는 주문일
+  userId?: number;
+  shippingAddress?: string;
+  shippingPostcode?: string;
+  items?: CartItem[];
+  orderDate?: Date;
 }
 
+// 사용자 정보 인터페이스
 export interface UserInfo {
-  id: number;           // User.id (Long)
-  email: string;        // User.email (String, unique)
-  role: string;         // User.role (Role enum)
-  name: string;         // User.name (String)
-  password?: string;    // User.password (회원가입 시에만 사용)
+  id: number;
+  email: string;
+  role: string;
+  name: string;
+  password?: string;
 }
 
+// 로그인 요청 인터페이스
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-// 회원가입 요청 (SignupRequest와 일치)
+// 회원가입 요청 인터페이스
 export interface SignupRequest {
-  email: string;        // @Email @NotBlank
-  password: string;      // @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$])[A-Za-z\\d!@#$]{8,}$")
-  name: string;         // @Size(min = 2, max = 20) @NotBlank
+  email: string;
+  password: string;
+  name: string;
 }
 
-// 결제 요청 (CheckoutRequest와 일치)
+// 결제 요청 인터페이스
 export interface CheckoutRequest {
-  shippingAddress: string;   // @NotBlank @Size(max = 200)
-  shippingPostcode: string;  // @NotBlank @Pattern(regexp = "\\d{5}")
+  shippingAddress: string;
+  shippingPostcode: string;
 }
 
+// 로그인 응답 인터페이스
 export interface LoginResponse {
   accessToken: string;
   tokenType: string;
@@ -91,19 +95,21 @@ export interface LoginResponse {
   name: string;
 }
 
-// 백엔드 ProductRequest와 일치하는 구조 (제품 생성/수정용)
+// 상품 생성/수정 요청 인터페이스
 export interface ProductRequest {
-  name: string;         // @NotBlank @Size(max = 120)
-  price: number;        // @NotNull @PositiveOrZero Integer
-  description: string;  // @Size(max = 1000) String
+  name: string;
+  price: number;
+  description: string;
 }
 
+// API 응답 공통 인터페이스
 export interface ApiResponse<T> {
   data: T;
   message?: string;
   success: boolean;
 }
 
+// JWT 토큰 디코딩 인터페이스
 interface DecodedToken {
   id?: number;
   userId?: number;
@@ -116,6 +122,7 @@ interface DecodedToken {
 
 // JWT 토큰 관리 유틸리티
 export const tokenUtils = {
+  // 토큰 유효성 검증
   isValid: (token: string): boolean => {
     if (!token) return false;
     try {
@@ -123,11 +130,11 @@ export const tokenUtils = {
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp ? payload.exp > currentTime : false;
     } catch (error) {
-      console.error('Token validation error:', error);
       return false;
     }
   },
 
+  // 토큰 만료까지 남은 시간 계산
   getTimeUntilExpiry: (token: string): number => {
     if (!token) return 0;
     try {
@@ -135,11 +142,11 @@ export const tokenUtils = {
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp ? Math.max(0, payload.exp - currentTime) : 0;
     } catch (error) {
-      console.error('Token expiry check error:', error);
       return 0;
     }
   },
 
+  // 토큰에서 사용자 정보 추출
   getUserInfo: (token: string): UserInfo | null => {
     if (!token) return null;
     try {
@@ -151,13 +158,12 @@ export const tokenUtils = {
         name: payload.name || '사용자',
       };
     } catch (error) {
-      console.error('Token user info extraction error:', error);
       return null;
     }
   },
 };
 
-// API 요청 헬퍼 함수
+// 기본 API 요청 함수
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
@@ -165,6 +171,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
     'Content-Type': 'application/json',
   };
 
+  // JWT 토큰이 있으면 Authorization 헤더에 추가
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   if (token && tokenUtils.isValid(token)) {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
@@ -184,6 +191,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
     if (!response.ok) {
       let errorMessage = `HTTP error! status: ${response.status}`;
       
+      // 401 에러 시 토큰 삭제 및 로그인 페이지로 리다이렉트
       if (response.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
@@ -205,7 +213,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
       throw new Error(errorMessage);
     }
 
-    // 응답이 비어있는 경우 (204 No Content 등)
+    // 빈 응답 처리 (204 No Content 등)
     if (response.status === 204 || response.headers.get('content-length') === '0') {
       return null as T;
     }
@@ -216,7 +224,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
   }
 }
 
-// 래핑된 API 응답용 헬퍼 함수
+// API 응답을 래핑하는 헬퍼 함수
 export async function wrappedApiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   try {
     const data = await apiRequest<T>(endpoint, options);
@@ -234,8 +242,8 @@ export async function wrappedApiRequest<T>(endpoint: string, options: RequestIni
   }
 }
 
-// 인증 관련 API
 export const authApi = {
+  // 사용자 로그인
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     return await apiRequest<LoginResponse>('/api/user/login', {
       method: 'POST',
@@ -243,6 +251,7 @@ export const authApi = {
     });
   },
 
+  // 사용자 회원가입
   signup: async (userData: SignupRequest): Promise<ApiResponse<UserInfo>> => {
     return await wrappedApiRequest<UserInfo>('/api/user/signup', {
       method: 'POST',
@@ -251,27 +260,27 @@ export const authApi = {
   },
 };
 
-// 주문 관련 API는 orderApi.ts로 분리됨 (현재 제거됨)
-
-// 상품 관련 API
 export const productApi = {
+  // 사용자용 상품 목록 조회
   getAllProducts: async (): Promise<ApiResponse<Product[]>> => {
     return await wrappedApiRequest<Product[]>('/api/user/beans');
   },
 
+  // 특정 상품 상세 조회
   getProductById: async (productId: number): Promise<ApiResponse<Product>> => {
     return await wrappedApiRequest<Product>(`/api/products/${productId}`);
   },
 };
 
-// 장바구니 관련 API
 export const cartApi = {
+  // 장바구니에 상품 추가
   addItem: async (productId: number): Promise<ApiResponse<null>> => {
     return await wrappedApiRequest<null>(`/api/user/item/${productId}`, {
       method: 'POST',
     });
   },
   
+  // 장바구니에서 상품 삭제
   removeItem: async (productId: number): Promise<ApiResponse<null>> => {
     return await wrappedApiRequest<null>(`/api/user/item/${productId}`, {
       method: 'DELETE',
@@ -279,8 +288,8 @@ export const cartApi = {
   },
 };
 
-// 체크아웃 관련 API
 export const checkoutApi = {
+  // 주문 결제 처리
   checkout: async (checkoutData: CheckoutRequest): Promise<ApiResponse<null>> => {
     return await wrappedApiRequest<null>('/api/user/orders/checkout', {
       method: 'POST',
@@ -289,14 +298,12 @@ export const checkoutApi = {
   },
 };
 
-// 주문 내역 관련 API
 export const orderHistoryApi = {
+  // 사용자 주문 내역 조회
   getUserOrders: async (): Promise<ApiResponse<Order[]>> => {
     try {
       return await wrappedApiRequest<Order[]>('/api/user/order');
     } catch (error) {
-      console.error('Get user orders API failed:', error);
-      // API 실패 시 빈 배열 반환
       return {
         data: [],
         success: false,

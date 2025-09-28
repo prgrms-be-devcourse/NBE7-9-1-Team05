@@ -6,19 +6,13 @@ import demo.cafemenu.domain.order.service.OrderService;
 import demo.cafemenu.global.security.*;
 import demo.cafemenu.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +34,13 @@ public class OrderController {
     public ResponseEntity<Void> addItemToCart(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId) {
         Long userId = userDetails.getId();
         orderService.addOrderItem(userId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 장바구니에 해당 상품 수량 삭제
+    @DeleteMapping("/item/{productId}")
+    public ResponseEntity<Void> removeFromCart (@RequestParam Long userId, @PathVariable Long productId){
+        orderService.removeFromCart(userId, productId);
         return ResponseEntity.ok().build();
     }
 

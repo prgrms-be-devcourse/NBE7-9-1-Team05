@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch (e) {
-      console.error("restore session failed:", e);
+      // 세션 복원 실패
     } finally {
       setIsLoading(false);
     }
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string
   ): Promise<UserInfo | null> => {
-
     setIsLoading(true);
+    
     try {
       const res = await authApi.login({ email, password });
 
@@ -75,13 +75,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           role: res.role,
           name: res.name,
         };
-
+        
         setUser(nextUser);
-        return nextUser;
+        
+        // 상태 업데이트 완료를 위해 Promise 반환
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(nextUser);
+          }, 100);
+        });
       }
+      
       return null;
     } catch (err) {
-      console.error("AuthContext Login failed:", err);
+      // 로그인 실패시 오류 처리
       return null;
     } finally {
       setIsLoading(false);
@@ -89,26 +96,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   // 로그아웃
-  const logout = async () => {
-    try {
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      // 클라이언트 데이터 정리
-      localStorage.removeItem("token");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("addedProducts"); // 관리자 추가 상품 정리
-      
-      // 사용자 상태 초기화
-      setUser(null);
-      
-      
-      // 적절한 페이지로 리다이렉트
-      const redirectPath = user?.role === ROLES.ADMIN
-        ? "/admin/login"
-        : "/login";
-      router.push(redirectPath);
-    }
+  const logout = () => {
+    // 현재 사용자 역할 저장 (상태 초기화 전에)
+    const currentUserRole = user?.role;
+    
+    // 클라이언트 데이터 정리
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("addedProducts");
+    
+    // 사용자 상태 초기화
+    setUser(null);
+    
+    // 적절한 페이지로 리다이렉트 (모든 사용자는 로그인 페이지로)
+    router.push("/login");
   };
 
   // 권한 체크

@@ -11,7 +11,7 @@ export const authApi = {
       // role 필드만 사용 (roles 배열 제거)
       return response;
     } catch (error) {
-      console.error('Login API failed:', error);
+      // 로그인 API 실패
       throw error;
     }
   },
@@ -20,18 +20,7 @@ export const authApi = {
     try {
       return await wrappedApiRequest<UserInfo>('/api/user/me');
     } catch (error) {
-      console.error('Get current user API failed:', error);
-      throw error;
-    }
-  },
-
-  logout: async (): Promise<ApiResponse<null>> => {
-    try {
-      return await wrappedApiRequest<null>('/api/user/logout', {
-        method: 'POST',
-      });
-    } catch (error) {
-      console.error('Logout API failed:', error);
+      // 현재 사용자 API 실패
       throw error;
     }
   },
@@ -47,7 +36,7 @@ export const authApi = {
         body: JSON.stringify(userData),
       });
     } catch (error) {
-      console.error('Register API failed:', error);
+      // 회원가입 API 실패
       throw error;
     }
   },

@@ -18,7 +18,7 @@ export default function SignupPage() {
     setNameError("");
     setPasswordError("");
 
-    // Email Validation
+    // 이메일 유효성 검사
     if (!email) {
       setEmailError("이메일은 필수 입력 항목입니다.");
       isValid = false;
@@ -27,7 +27,7 @@ export default function SignupPage() {
       isValid = false;
     }
 
-    // Name Validation
+    // 이름 유효성 검사
     if (!name) {
       setNameError("이름은 필수 입력 항목입니다.");
       isValid = false;
@@ -36,7 +36,7 @@ export default function SignupPage() {
       isValid = false;
     }
 
-    // Password Validation
+    // 비밀번호 유효성 검사
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$])[A-Za-z\d!@#$]{8,}$/;
     if (!password) {
       setPasswordError("비밀번호는 필수 입력 항목입니다.");
@@ -56,7 +56,7 @@ export default function SignupPage() {
       return;
     }
     
-    // Backend API call
+    // 백엔드 API 호출
     const res = await fetch("http://localhost:8080/api/user/signup", {
       method: "POST",
       headers: {
@@ -67,12 +67,12 @@ export default function SignupPage() {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("회원가입 성공:", data);
+      // 회원가입 성공
       alert("회원가입 성공!");
-      // Optionally redirect to login page or home page
+      // 선택적으로 로그인 페이지 또는 홈 페이지로 리다이렉트
     } else {
       const err = await res.json();
-      console.error("회원가입 실패:", err);
+      // 회원가입 실패
       alert(`회원가입 실패: ${err.message || "서버 오류"}`);
     }
   };
@@ -80,7 +80,7 @@ export default function SignupPage() {
   return (
     <div className="container-fluid" style={{ height: 'calc(100vh - 56px)' }}>
       <div className="row g-0 h-100">
-        {/* Image Column */}
+        {/* 이미지 컬럼 */}
         <div className="col-md-6 col-lg-7 d-none d-md-block">
           <Image
             src="/images/coffee-darkroast.png"
@@ -91,7 +91,7 @@ export default function SignupPage() {
           />
         </div>
 
-        {/* Form Column */}
+        {/* 폼 컬럼 */}
         <div className="col-md-6 col-lg-5 d-flex align-items-center justify-content-center bg-light">
           <div className="w-100" style={{ maxWidth: '400px' }}>
             <div className="card-body p-4 p-sm-5">

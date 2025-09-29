@@ -8,7 +8,6 @@ export const adminProductApi = {
         method: 'GET',
       });
     } catch (error) {
-      console.error('Admin get all products API failed:', error);
       
       // API 실패 시 더미 데이터 fallback
       const dummyProducts: Product[] = [
@@ -45,7 +44,6 @@ export const adminProductApi = {
         body: JSON.stringify(productData),
       });
     } catch (error) {
-      console.error('Admin create product API failed:', error);
       throw error;
     }
   },
@@ -58,7 +56,6 @@ export const adminProductApi = {
         body: JSON.stringify(productData),
       });
     } catch (error) {
-      console.error('Admin update product API failed:', error);
       throw error;
     }
   },
@@ -69,7 +66,6 @@ export const adminProductApi = {
         method: 'DELETE',
       });
     } catch (error) {
-      console.error('Admin delete product API failed:', error);
       throw error;
     }
   },

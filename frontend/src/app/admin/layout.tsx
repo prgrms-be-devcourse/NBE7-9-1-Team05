@@ -16,22 +16,21 @@ export default function AdminLayout({
   useEffect(() => {
     // 로딩 중이 아닐 때만 권한 체크
     if (!isLoading) {
-      console.log('🔐 Admin layout check:', { isAuthenticated, isAdmin, user: user?.role });
-      
+      // 관리자 레이아웃 권한 확인
       if (!isAuthenticated) {
-        console.log('🔐 Not authenticated, redirecting to login');
+        // 인증되지 않은 경우 로그인 페이지로 리다이렉트
         router.push('/login');
         return;
       }
       
       if (!isAdmin) {
-        console.log('🔐 Not admin, redirecting to login');
+        // 관리자가 아닌 경우 로그인 페이지로 리다이렉트
         alert('관리자 권한이 필요합니다.');
         router.push('/login');
         return;
       }
       
-      console.log('🔐 Admin access granted');
+      // 관리자 접근 허용
     }
   }, [isLoading, isAdmin, isAuthenticated, user, router]);
 

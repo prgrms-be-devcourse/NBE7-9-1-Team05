@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { productApi } from "../services/productService";
-import { adminProductApi } from "../services/adminProductService";
-import { Product } from "../services/api";
-import { useAuth } from "../context/AuthContext";
+import { productApi } from "../../services/productService";
+import { adminProductApi } from "../../services/adminProductService";
+import { Product } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 // 상품 ID에 따른 이미지 매핑 함수 (백엔드 더미 데이터에 맞춤)
 const getProductImage = (productId: number): string => {

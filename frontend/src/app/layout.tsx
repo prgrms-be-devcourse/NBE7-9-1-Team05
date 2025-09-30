@@ -2,9 +2,9 @@
 
 import Script from "next/script";
 import { usePathname } from 'next/navigation'; 
-import Navbar from "./components/Navbar";
-import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
+import Navbar from "../components/Navbar";
+import { CartProvider } from '../context/CartContext';
+import { AuthProvider } from '../context/AuthContext';
 
 export default function RootLayout({
   children,

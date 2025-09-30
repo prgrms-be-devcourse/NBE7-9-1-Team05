@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import { Order, OrderWithDetails, orderHistoryApi } from '../../services/api';
+import { useCart } from '../../../context/CartContext';
+import { useAuth } from '../../../context/AuthContext';
+import { Order, OrderWithDetails, orderHistoryApi } from '../../../services/api';
 
 export default function OrderHistoryPage() {
   const { isLoading } = useCart();

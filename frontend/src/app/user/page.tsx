@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ProductList from "@/app/components/ProductList";
-import CartSummary from "@/app/components/CartSummary";
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import ProductList from "../../components/ProductList";
+import CartSummary from "../../components/CartSummary";
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 export default function UserPage() {
   const { products, cartItems, totalAmount, addToCart, deleteToCart, checkout, isLoading } = useCart();

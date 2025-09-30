@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../context/AuthContext';
-import { ROLES } from '../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { ROLES } from '../../services/api';
 import Image from "next/image";
 
 export default function LoginPage() {

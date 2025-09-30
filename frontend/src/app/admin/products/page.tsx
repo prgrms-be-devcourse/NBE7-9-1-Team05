@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { productApi } from '../../services/productService';
-import { Product, ProductRequest } from '../../services/api';
-import { adminProductApi } from '../../services/adminProductService';
-import { useAuth } from '../../context/AuthContext';
+import { productApi } from '../../../services/productService';
+import { Product, ProductRequest } from '../../../services/api';
+import { adminProductApi } from '../../../services/adminProductService';
+import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 

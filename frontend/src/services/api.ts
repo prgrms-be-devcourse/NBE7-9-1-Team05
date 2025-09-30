@@ -245,7 +245,7 @@ export async function wrappedApiRequest<T>(endpoint: string, options: RequestIni
 export const authApi = {
   // 사용자 로그인
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    return await apiRequest<LoginResponse>('/api/user/login', {
+    return await apiRequest<LoginResponse>('/api/user/login', { 
       method: 'POST',
       body: JSON.stringify(credentials),
     });

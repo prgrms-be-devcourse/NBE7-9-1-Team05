@@ -51,7 +51,7 @@ Cafe Menu는 커피숍을 위한 온라인 주문 관리 시스템입니다. <br
 ### Frontend
 - **Framework**: Next.js 15.5.4
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Bootstrap 5.3.3
 - **State Management**: React Context API
 - **Authentication**: JWT Token
 
@@ -76,13 +76,30 @@ NBE7-9-1-Team05/
 │   │   └── application.yml # 설정 파일
 │   └── build.gradle.kts    # Gradle 설정
 ├── frontend/               # Next.js 프론트엔드
-│   ├── src/app/
-│   │   ├── admin/          # 관리자 페이지
+│   ├── src/
+│   │   ├── app/            # Next.js App Router (페이지와 라우팅)
+│   │   │   ├── admin/      # 관리자 페이지
+│   │   │   ├── login/      # 로그인 페이지
+│   │   │   ├── order/      # 주문 관련 페이지
+│   │   │   ├── products/   # 상품 페이지
+│   │   │   ├── user/       # 사용자 페이지
+│   │   │   ├── layout.tsx  # 루트 레이아웃
+│   │   │   └── page.tsx    # 홈페이지
 │   │   ├── components/     # 재사용 컴포넌트
-│   │   ├── context/        # React Context
-│   │   ├── services/       # API 서비스
-│   │   └── user/           # 사용자 페이지
+│   │   │   ├── CartSummary.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   └── ProductList.tsx
+│   │   ├── context/        # React Context (전역 상태 관리)
+│   │   │   ├── AuthContext.tsx
+│   │   │   └── CartContext.tsx
+│   │   └── services/        # API 서비스 (TypeScript DDL)
+│   │       ├── adminProductService.ts
+│   │       ├── api.ts
+│   │       ├── authService.ts
+│   │       └── productService.ts
 │   ├── public/             # 정적 파일
+│   │   ├── favicon.ico
+│   │   └── images/
 │   └── package.json        # NPM 설정
 └── README.md
 ```
@@ -102,7 +119,7 @@ cd backend
 
 ```bash
 cd frontend
-npx create-next-app@latest my-app
+npm install
 npm run dev
 ```
 
